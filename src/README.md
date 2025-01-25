@@ -17,13 +17,43 @@ See [Vite Configuration Reference](https://vite.dev/config/).
 ## Project Setup
 
 ```sh
-npm install
+npm setup
+```
+
+## Install dependencies
+
+```sh
+npm refresh
 ```
 
 ### Compile and Hot-Reload for Development
 
 ```sh
 npm run dev
+```
+
+### Auto-Fix Formatting Issues
+
+```sh
+npm run format
+```
+
+### Type-Check, Compile and Minify for Production
+
+```sh
+npm run check
+```
+
+### Type-Check, Compile and Minify for Production
+
+```sh
+npm run build
+```
+
+### Type-Check, Compile and Minify for Production
+
+```sh
+npm run build
 ```
 
 ### Type-Check, Compile and Minify for Production
