@@ -5,5 +5,6 @@ import TheWelcome from '../components/TheWelcome.vue'
 <template>
   <main>
     <TheWelcome />
+    <a href="/tasks"> Look at Tasks </a>
   </main>
 </template>

@@ -21,6 +21,9 @@ export const useTaskStore = defineStore('Tasks', () => {
   function get(key: number) {
     return tasks.filter((x) => x.key === key)
   }
+  function getAll() {
+    return tasks.map((x) => x)
+  }
   function update(task: Task) {
     const index = tasks.findIndex((x) => x.key === task.key)
     tasks[index] = task
@@ -30,5 +33,5 @@ export const useTaskStore = defineStore('Tasks', () => {
     tasks.splice(index, 1)
   }
 
-  return { add, get, update, remove }
+  return { add, get, getAll, update, remove }
 })
