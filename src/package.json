@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "setup": "npm run i -g pnpm@9.15.2",
+    "setup": "npm i -g pnpm@9.15.2",
     "refresh": "pnpm i --frozen-lockfile",
     "dev": "vite",
     "preview": "vite preview",
