@@ -4,13 +4,20 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "setup": "npm i -g pnpm@9.15.2",
+    "refresh": "pnpm i --frozen-lockfile",
     "dev": "vite",
-    "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
-    "build-only": "vite build",
-    "type-check": "vue-tsc --build",
-    "lint": "eslint . --fix",
-    "format": "prettier --write src/"
+    "format:lint": "eslint . --fix",
+    "format:prettier": "prettier --write src/",
+    "format": "pnpm format:prettier && pnpm format:lint",
+    "check:typescript": "vue-tsc --noEmit",
+    "check:lint": "eslint .",
+    "check:prettier": "prettier --check  src/",
+    "check": "pnpm run /^check:.*/ ",
+    "build:vite": "vite build",
+    "build": "pnpm check && pnpm build:vite",
+    "ci:test": "npm run setup && pnpm refresh && pnpm build"
   },
   "dependencies": {
     "pinia": "^2.3.1",
@@ -27,7 +34,6 @@
     "eslint": "^9.18.0",
     "eslint-plugin-vue": "^9.32.0",
     "jiti": "^2.4.2",
-    "npm-run-all2": "^7.0.2",
     "prettier": "^3.4.2",
     "typescript": "~5.7.3",
     "vite": "^6.0.11",
