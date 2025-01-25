@@ -1,3 +1,4 @@
+import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export enum TaskStatus {
@@ -12,26 +13,36 @@ export interface Task {
   name: string
 }
 
-const tasks: Array<Task> = []
+const refTasks = ref(new Array<Task>())
 
 export const useTaskStore = defineStore('Tasks', () => {
-  function add(task: Task) {
-    tasks.push(task)
-  }
-  function get(key: number) {
-    return tasks.filter((x) => x.key === key)
-  }
-  function getAll() {
-    return tasks.map((x) => x)
-  }
-  function update(task: Task) {
-    const index = tasks.findIndex((x) => x.key === task.key)
-    tasks[index] = task
-  }
-  function remove(task: Task) {
-    const index = tasks.findIndex((x) => x.key === task.key)
-    tasks.splice(index, 1)
+  let keyCounter = 0
+
+  const allTasks = computed(() => refTasks.value.map((x) => x))
+
+  function addCopy(task: Task) {
+    const newTask: Task = {
+      key: keyCounter++,
+      status: task.status,
+      name: task.name,
+    }
+    refTasks.value.push(newTask)
+    return newTask
   }
 
-  return { add, get, getAll, update, remove }
+  function get(key: number) {
+    return refTasks.value.filter((x) => x.key === key)
+  }
+
+  function update(task: Task) {
+    const index = refTasks.value.findIndex((x) => x.key === task.key)
+    refTasks.value[index] = task
+  }
+
+  function remove(task: Task) {
+    const index = refTasks.value.findIndex((x) => x.key === task.key)
+    refTasks.value.splice(index, 1)
+  }
+
+  return { addCopy, get, allTasks, update, remove }
 })

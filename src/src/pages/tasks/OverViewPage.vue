@@ -2,16 +2,23 @@
 import { useTaskStore, type Task, TaskStatus } from '@/stores/Task'
 
 const taskStore = useTaskStore()
-const tasks = taskStore.getAll()
 
 const newee: Task = { key: 3, status: TaskStatus.ToDo, name: 'A Task' }
-taskStore.add(newee)
+
+function createTask() {
+  taskStore.addCopy(newee)
+}
 </script>
 
 <template>
   <div class="about">
     <h1>This is an TaskS page</h1>
-    <div v-for="task in tasks" :key="task.key">Name: {{ task.name }}</div>
+    <ul>
+      <li v-for="task in taskStore.allTasks" :key="task.key">
+        <div># {{ task.key }} - {{ task.name }}</div>
+      </li>
+    </ul>
+    <button @click="createTask">Greet</button>
   </div>
 </template>
 
