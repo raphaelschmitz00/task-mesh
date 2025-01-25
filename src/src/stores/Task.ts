@@ -7,10 +7,10 @@ export enum TaskStatus {
   Done,
 }
 
-export interface Task {
-  key: number
-  status: TaskStatus
-  name: string
+export class Task {
+  key: number = -1
+  status: TaskStatus = TaskStatus.ToDo
+  name: string = ''
 }
 
 const refTasks = ref(new Array<Task>())
@@ -31,12 +31,15 @@ export const useTaskStore = defineStore('Tasks', () => {
   }
 
   function get(key: number) {
-    return refTasks.value.filter((x) => x.key === key)
+    return refTasks.value.filter((x) => x.key === key)[0]
   }
 
   function update(task: Task) {
-    const index = refTasks.value.findIndex((x) => x.key === task.key)
-    refTasks.value[index] = task
+    refTasks.value[task.key] = { ...refTasks.value[task.key], ...task }
+
+    const storedTask = refTasks.value[task.key]
+    storedTask.status = task.status
+    storedTask.name = task.name
   }
 
   function remove(task: Task) {

@@ -1,30 +1,28 @@
 <script setup lang="ts">
-import { useTaskStore, type Task, TaskStatus } from '@/stores/Task'
+import { useTaskStore } from '@/stores/Task'
+import CreateTaskWidget from '@/widgets/CreateTaskWidget.vue'
+import TaskEntryView from './TaskEntryView.vue'
 
 const taskStore = useTaskStore()
-
-const newee: Task = { key: 3, status: TaskStatus.ToDo, name: 'A Task' }
-
-function createTask() {
-  taskStore.addCopy(newee)
-}
 </script>
 
 <template>
-  <div class="about">
-    <h1>This is an TaskS page</h1>
-    <ul>
-      <li v-for="task in taskStore.allTasks" :key="task.key">
-        <div># {{ task.key }} - {{ task.name }}</div>
-      </li>
-    </ul>
-    <button @click="createTask">Greet</button>
+  <div class="tassks">
+    <h1>Tasks</h1>
+    <div>
+      <ul>
+        <li v-for="task in taskStore.allTasks" :key="task.key">
+          <TaskEntryView :task="task" />
+        </li>
+      </ul>
+    </div>
+    <CreateTaskWidget />
   </div>
 </template>
 
 <style>
 @media (min-width: 1024px) {
-  .about {
+  .tasks {
     min-height: 100vh;
     display: flex;
     align-items: center;
