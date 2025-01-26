@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 import { type Task, useTaskStore } from '@/stores/Task'
+import TaskStatusEditor from '@/widgets/TaskStatusEditor.vue'
 import UpdateTaskWidget from '@/widgets/UpdateTaskWidget.vue'
 
 const props = defineProps<{
@@ -23,7 +24,8 @@ function deleteTask() {
 <template>
   <div>
     <span>
-      # {{ props.task.key }} - {{ props.task.status }} -
+      # {{ props.task.key }} -
+      <TaskStatusEditor :status="props.task.status" />
       <UpdateTaskWidget
         v-if="state.isEditing"
         :task="props.task"
