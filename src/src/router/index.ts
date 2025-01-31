@@ -18,6 +18,11 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue'),
     },
     {
+      path: '/status',
+      name: 'status',
+      component: () => import('../pages/status/StatusBoardPage.vue'),
+    },
+    {
       path: '/tasks',
       name: 'tasks',
       component: () => import('../pages/tasks/OverViewPage.vue'),

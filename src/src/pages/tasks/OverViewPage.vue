@@ -7,7 +7,7 @@ const taskStore = useTaskStore()
 </script>
 
 <template>
-  <div class="tassks">
+  <div>
     <h1>Tasks</h1>
     <div>
       <ul>
@@ -19,13 +19,3 @@ const taskStore = useTaskStore()
     <CreateTaskWidget />
   </div>
 </template>
-
-<style>
-@media (min-width: 1024px) {
-  .tasks {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
-</style>
