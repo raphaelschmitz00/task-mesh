@@ -1,20 +1,48 @@
-name: Pull Request Checks
+
+name: Deploy to GitHub Pages
 
 on:
-  pull_request:
-    branches: ["main"]
+  push:
+    branches:
+      - main 
+
+permissions:
+  contents: read  # Required for checking out the repository
+  pages: write    # Required for deploying to GitHub Pages
+  id-token: write # Required for authentication
 
 jobs:
-  - name: Configure GitHub Pages
-    uses: actions/configure-pages@v5
-  
-
-  validate:
-    name: Validate Application
+  build-and-deploy:
+    name: Deploy to GitHub Pages
     runs-on: ubuntu-22.04
     defaults:
       run:
         working-directory: ./src
+
     steps:
-      - uses: actions/checkout@v4
-      - run: npm run ci:test
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Set up tooling
+        run: npm run setup
+
+      - name: Install dependencies
+        run: npm run refresh
+
+      - name: Build project
+        run: npm run build
+
+      - name: Configure GitHub Pages
+        run: mkdir -p dist
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: dist
