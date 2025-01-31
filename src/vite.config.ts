@@ -1,11 +1,8 @@
 import { fileURLToPath, URL } from 'node:url'
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
-
-const env = loadEnv('', process.cwd(), '')
-console.log('BBB', env.VITE_PUBLIC_URL)
 
 export default defineConfig({
   plugins: [
