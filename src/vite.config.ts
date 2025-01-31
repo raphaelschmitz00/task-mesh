@@ -46,5 +46,5 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
-  publicDir: env.VITE_PUBLIC_URL,
+  base: '',
 })
