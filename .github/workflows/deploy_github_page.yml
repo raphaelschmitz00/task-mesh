@@ -4,20 +4,22 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main 
+      - main
+  workflow_dispatch:
 
 permissions:
-  contents: read  # Required for checking out the repository
-  pages: write    # Required for deploying to GitHub Pages
-  id-token: write # Required for authentication
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
+
   build-and-deploy:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: ./src
 
     steps:
       - name: Checkout repository
@@ -28,20 +30,18 @@ jobs:
         with:
           node-version: 22
 
-      - name: Set up tooling
-        run: npm run setup
-
-      - name: Install dependencies
-        run: npm run refresh
-
       - name: Build project
-        run: npm run build
+        run: npm run ci:build
+        working-directory: src
 
-      - name: Configure GitHub Pages
-        run: mkdir -p dist
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'src/dist'
 
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: gh-pages
-          folder: dist
+        id: deployment
+        uses: actions/deploy-pages@v4
