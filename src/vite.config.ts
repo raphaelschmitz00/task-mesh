@@ -41,6 +41,8 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
+      '@c': fileURLToPath(new URL('./src/components', import.meta.url)),
+      '@w': fileURLToPath(new URL('./src/widgets', import.meta.url)),
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },

@@ -17,33 +17,45 @@ const dones = computed(() => getWithStatus(TaskStatus.Done))
   <div>
     <h1>Tasks</h1>
     <table>
-      <tr>
-        <td>
-          ToDo
-          <ul>
-            <li v-for="task in todos" :key="task.key">
-              <TaskEntryView :task="task" />
-            </li>
-          </ul>
-        </td>
-        <td>
-          Doing
-          <ul>
-            <li v-for="task in doings" :key="task.key">
-              <TaskEntryView :task="task" />
-            </li>
-          </ul>
-        </td>
-        <td>
-          Done
-          <ul>
-            <li v-for="task in dones" :key="task.key">
-              <TaskEntryView :task="task" />
-            </li>
-          </ul>
-        </td>
-      </tr>
+      <tbody>
+        <tr>
+          <td>
+            ToDo
+            <ul>
+              <li v-for="task in todos" :key="task.key">
+                <TaskEntryView :task="task" />
+              </li>
+            </ul>
+          </td>
+          <td>
+            Doing
+            <ul>
+              <li v-for="task in doings" :key="task.key">
+                <TaskEntryView :task="task" />
+              </li>
+            </ul>
+          </td>
+          <td>
+            Done
+            <ul>
+              <li v-for="task in dones" :key="task.key">
+                <TaskEntryView :task="task" />
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
     </table>
     <CreateTaskWidget />
   </div>
 </template>
+
+<style scoped>
+table {
+  table-layout: fixed;
+  width: 100%;
+}
+td {
+  width: 33%;
+}
+</style>
