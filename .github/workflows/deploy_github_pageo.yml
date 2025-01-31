@@ -10,9 +10,8 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read  # Required for checking out the repository
-  pages: write    # Required for deploying to GitHub Pages
-  id-token: write # Required for authentication
+  pages: write
+  id-token: write
 
 concurrency:
   group: "pages"
