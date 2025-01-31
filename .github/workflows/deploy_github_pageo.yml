@@ -23,9 +23,6 @@ jobs:
   build-and-deploy:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: ./src
 
     steps:
       - name: Checkout repository
@@ -38,13 +35,16 @@ jobs:
 
       - name: Build project
         run: npm run ci:build
+        working-directory: src
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          path: 'src/dist'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
