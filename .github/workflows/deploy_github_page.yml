@@ -9,7 +9,7 @@ on:
     branches: ["main"]
 
 permissions:
-  contents: read  # Required for checking out the repository
+  contents: write  # Required for checking out the repository
   pages: write    # Required for deploying to GitHub Pages
   id-token: write # Required for authentication
 
