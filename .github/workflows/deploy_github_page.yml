@@ -1,0 +1,20 @@
+name: Pull Request Checks
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  - name: Configure GitHub Pages
+    uses: actions/configure-pages@v5
+  
+
+  validate:
+    name: Validate Application
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: ./src
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm run ci:test
