@@ -8,9 +8,15 @@ importers:
 
   .:
     dependencies:
+      '@quasar/extras':
+        specifier: ^1.16.16
+        version: 1.16.16
       pinia:
         specifier: ^2.3.1
         version: 2.3.1(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3))
+      quasar:
+        specifier: ^2.17.7
+        version: 2.17.7
       vue:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.7.3)
@@ -18,6 +24,9 @@ importers:
         specifier: ^4.5.0
         version: 4.5.0(vue@3.5.13(typescript@5.7.3))
     devDependencies:
+      '@quasar/vite-plugin':
+        specifier: ^1.9.0
+        version: 1.9.0(@vitejs/plugin-vue@5.2.1(vite@6.0.11(@types/node@22.10.10)(jiti@2.4.2)(terser@5.37.0))(vue@3.5.13(typescript@5.7.3)))(quasar@2.17.7)(vite@6.0.11(@types/node@22.10.10)(jiti@2.4.2)(terser@5.37.0))(vue@3.5.13(typescript@5.7.3))
       '@tsconfig/node22':
         specifier: ^22.0.0
         version: 22.0.0
@@ -851,6 +860,18 @@ packages:
 
   '@polka/url@1.0.0-next.28':
     resolution: {integrity: sha512-8LduaNlMZGwdZ6qWrKlfa+2M4gahzFkprZiAt2TF8uS0qQgBizKXpXURqvTJ4WtmupWxaLqjRb2UCTe72mu+Aw==}
+
+  '@quasar/extras@1.16.16':
+    resolution: {integrity: sha512-aswGUbEyLvt45KB1u6hBD3s82KnOdkqTn6YVu3xX5aGgwQkCWPyqb3FMTEHG+4+gGTMp4pIcnng96RlqswQctQ==}
+
+  '@quasar/vite-plugin@1.9.0':
+    resolution: {integrity: sha512-r1MFtI2QZJ2g20pe75Zuv4aoi0uoK8oP0yEdzLWRoOLCbhtf2+StJpUza9TydYi3KcvCl9+4HUf3OAWVKoxDmQ==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@vitejs/plugin-vue': ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0
+      quasar: ^2.16.0
+      vite: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
+      vue: ^3.0.0
 
   '@rollup/plugin-babel@5.3.1':
     resolution: {integrity: sha512-WFfdLWU/xVWKeRQnKmIAQULUI7Il0gZnBIH/ZFO069wYIfPu+8zrfp/KMW0atmELoRDq8FbiP3VCss9MhCut7Q==}
@@ -2332,6 +2353,10 @@ packages:
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
+
+  quasar@2.17.7:
+    resolution: {integrity: sha512-nPJdHoONlcW7WEU2Ody907Wx945Zfyuea/KP4LBaEn5AcL95PUWp8Gz/0zDYNnFw0aCWRtye3SUAdQl5tmrn5w==}
+    engines: {node: '>= 10.18.1', npm: '>= 6.13.4', yarn: '>= 1.21.1'}
 
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
@@ -3825,6 +3850,15 @@ snapshots:
   '@pkgr/core@0.1.1': {}
 
   '@polka/url@1.0.0-next.28': {}
+
+  '@quasar/extras@1.16.16': {}
+
+  '@quasar/vite-plugin@1.9.0(@vitejs/plugin-vue@5.2.1(vite@6.0.11(@types/node@22.10.10)(jiti@2.4.2)(terser@5.37.0))(vue@3.5.13(typescript@5.7.3)))(quasar@2.17.7)(vite@6.0.11(@types/node@22.10.10)(jiti@2.4.2)(terser@5.37.0))(vue@3.5.13(typescript@5.7.3))':
+    dependencies:
+      '@vitejs/plugin-vue': 5.2.1(vite@6.0.11(@types/node@22.10.10)(jiti@2.4.2)(terser@5.37.0))(vue@3.5.13(typescript@5.7.3))
+      quasar: 2.17.7
+      vite: 6.0.11(@types/node@22.10.10)(jiti@2.4.2)(terser@5.37.0)
+      vue: 3.5.13(typescript@5.7.3)
 
   '@rollup/plugin-babel@5.3.1(@babel/core@7.26.7)(rollup@2.79.2)':
     dependencies:
@@ -5407,6 +5441,8 @@ snapshots:
       once: 1.4.0
 
   punycode@2.3.1: {}
+
+  quasar@2.17.7: {}
 
   queue-microtask@1.2.3: {}
 

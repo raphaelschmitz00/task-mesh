@@ -3,10 +3,13 @@ import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
+import { quasar, transformAssetUrls } from '@quasar/vite-plugin'
 
 export default defineConfig({
   plugins: [
-    vue(),
+    vue({
+      template: { transformAssetUrls },
+    }),
     vueDevTools(),
     VitePWA({
       registerType: 'autoUpdate',
@@ -37,11 +40,10 @@ export default defineConfig({
         type: 'module',
       },
     }),
+    quasar({}),
   ],
   resolve: {
     alias: {
-      '@c': fileURLToPath(new URL('./src/components', import.meta.url)),
-      '@w': fileURLToPath(new URL('./src/widgets', import.meta.url)),
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
