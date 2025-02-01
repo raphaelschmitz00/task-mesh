@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 import { type Task, TaskStatus, useTaskStore } from '@/stores/Task'
-import Card from '@c/TmCard.vue'
+import StandardCard from '@/styling/StandardCard.vue'
 import TaskStatusEditor from '@/widgets/TaskStatusEditor.vue'
 import UpdateTaskWidget from '@/widgets/UpdateTaskWidget.vue'
 
@@ -27,7 +27,7 @@ function deleteTask() {
 </script>
 
 <template>
-  <Card>
+  <StandardCard>
     <span>
       # {{ props.task.key }} -
       <TaskStatusEditor :status="props.task.status" @changed="updateStatus" />
@@ -40,7 +40,7 @@ function deleteTask() {
     </span>
     <a class="iconLink" @click.stop.prevent="state.isEditing = true" href="">🖊</a>
     <a class="iconLink" @click.stop.prevent="deleteTask" href="">🗑</a>
-  </Card>
+  </StandardCard>
 </template>
 
 <style lang="css" scoped>

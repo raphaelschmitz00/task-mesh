@@ -40,9 +40,7 @@ export default defineConfig({
         type: 'module',
       },
     }),
-    quasar({
-      autoImportComponentCase: 'pascal',
-    }),
+    quasar({}),
   ],
   resolve: {
     alias: {
