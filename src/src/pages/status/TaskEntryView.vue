@@ -4,6 +4,7 @@ import { type Task, TaskStatus, useTaskStore } from '@/stores/Task'
 import StandardCard from '@/styling/StandardCard.vue'
 import TaskStatusEditor from '@/widgets/TaskStatusEditor.vue'
 import UpdateTaskWidget from '@/widgets/UpdateTaskWidget.vue'
+import TaskStatusView from '@/widgets/TaskStatusView.vue'
 
 const props = defineProps<{
   task: Task
@@ -29,8 +30,8 @@ function deleteTask() {
 <template>
   <StandardCard>
     <span>
+      <TaskStatusView :status="props.task.status" />
       # {{ props.task.key }} -
-      <TaskStatusEditor :status="props.task.status" @changed="updateStatus" />
       <UpdateTaskWidget
         v-if="state.isEditing"
         :task="props.task"
@@ -38,14 +39,16 @@ function deleteTask() {
       />
       <span v-else> {{ props.task.name }}</span>
     </span>
-    <a class="iconLink" @click.stop.prevent="state.isEditing = true" href="">🖊</a>
-    <a class="iconLink" @click.stop.prevent="deleteTask" href="">🗑</a>
+    <div>
+      <TaskStatusEditor :model-value="props.task.status" @update:model-value="updateStatus" />
+    </div>
+    <a class="iconLink" @click.stop.prevent="state.isEditing = true" href="">🖊 Edit</a>
+    <a class="iconLink" @click.stop.prevent="deleteTask" href="">🗑 Delete</a>
   </StandardCard>
 </template>
 
 <style lang="css" scoped>
 .iconLink {
-  color: white;
-  font-size: 2rem;
+  display: block;
 }
 </style>
