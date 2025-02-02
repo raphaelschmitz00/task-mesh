@@ -8,7 +8,7 @@ import '@quasar/extras/roboto-font/roboto-font.css'
 import 'quasar/dist/quasar.css'
 
 import App from './App.vue'
-import router from './router'
+import router from './pages/router'
 
 const app = createApp(App)
 

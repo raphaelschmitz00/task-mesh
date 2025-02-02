@@ -7,6 +7,15 @@ export enum TaskStatus {
   Done,
 }
 
+export const allTaskStatuses = [TaskStatus.ToDo, TaskStatus.Doing, TaskStatus.Done]
+
+export function getTaskStatusName(status: TaskStatus) {
+  if (status === TaskStatus.ToDo) return 'To Do'
+  if (status === TaskStatus.Doing) return 'Doing'
+  if (status === TaskStatus.Done) return 'Done'
+  throw new Error(`Task Status unrecognized: ${status}`)
+}
+
 export class Task {
   key: number = -1
   status: TaskStatus = TaskStatus.ToDo

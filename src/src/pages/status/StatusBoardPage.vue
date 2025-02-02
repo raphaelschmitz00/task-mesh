@@ -16,46 +16,34 @@ const dones = computed(() => getWithStatus(TaskStatus.Done))
 <template>
   <div>
     <h1>Tasks</h1>
-    <table>
-      <tbody>
-        <tr>
-          <td>
-            ToDo
-            <ul>
-              <li v-for="task in todos" :key="task.key">
-                <TaskEntryView :task="task" />
-              </li>
-            </ul>
-          </td>
-          <td>
-            Doing
-            <ul>
-              <li v-for="task in doings" :key="task.key">
-                <TaskEntryView :task="task" />
-              </li>
-            </ul>
-          </td>
-          <td>
-            Done
-            <ul>
-              <li v-for="task in dones" :key="task.key">
-                <TaskEntryView :task="task" />
-              </li>
-            </ul>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div>
+      <div class="taskColumnHeader">To Do</div>
+      <div class="taskColumnHeader">Doing</div>
+      <div class="taskColumnHeader">Done</div>
+    </div>
+    <div>
+      <div class="taskColumn">
+        <TaskEntryView v-for="task in todos" :key="task.key" :task="task" />
+      </div>
+      <div class="taskColumn">
+        <TaskEntryView v-for="task in doings" :key="task.key" :task="task" />
+      </div>
+      <div class="taskColumn">
+        <TaskEntryView v-for="task in dones" :key="task.key" :task="task" />
+      </div>
+    </div>
     <CreateTaskWidget />
   </div>
 </template>
 
 <style scoped>
-table {
-  table-layout: fixed;
-  width: 100%;
+.taskColumnHeader {
+  display: inline-block;
+  width: 33%;
+  text-align: center;
 }
-td {
+.taskColumn {
+  display: inline-block;
   width: 33%;
 }
 </style>
