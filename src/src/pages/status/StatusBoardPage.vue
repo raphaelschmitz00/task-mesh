@@ -14,8 +14,8 @@ const dones = computed(() => getWithStatus(TaskStatus.Done))
 </script>
 
 <template>
-  <div>
-    <h1>Tasks</h1>
+  <div class="AAAAAA">
+    <h1>Status Board</h1>
     <div>
       <div class="taskColumnHeader">To Do</div>
       <div class="taskColumnHeader">Doing</div>
