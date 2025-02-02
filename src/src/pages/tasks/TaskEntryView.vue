@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 import { type Task, TaskStatus, useTaskStore } from '@/stores/Task'
-import TaskStatusEditor from '@/widgets/TaskStatusEditor.vue'
+import TaskStatusEditor from '@/widgets/TaskStatusDropdown.vue'
 import UpdateTaskWidget from '@/widgets/UpdateTaskWidget.vue'
 
 const props = defineProps<{

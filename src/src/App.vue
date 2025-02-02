@@ -16,7 +16,7 @@ const router = useRouter()
     <q-header elevated reveal>
       <q-toolbar>
         <q-btn flat @click="state.drawerIsOpen = !state.drawerIsOpen" round icon="menu" />
-        <q-btn flat round icon="img:logo.svg" @click="router.push('/')" />
+        <q-btn flat round icon="img:/logo.svg" @click="router.push('/')" />
         <q-toolbar-title>Task Mesh</q-toolbar-title>
       </q-toolbar>
     </q-header>
@@ -35,7 +35,7 @@ const router = useRouter()
     </q-drawer>
 
     <q-page-container>
-      <q-page>
+      <q-page class="q-pa-lg">
         <RouterView />
       </q-page>
     </q-page-container>

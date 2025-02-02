@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{
+  icon?: string
   label?: string
 }>()
 
@@ -9,5 +10,5 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <q-btn :label="props.label" @click="emit('click')" />
+  <q-btn :icon="props.icon" :label="props.label" @click="emit('click')" />
 </template>
