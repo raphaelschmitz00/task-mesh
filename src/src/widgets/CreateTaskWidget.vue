@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 import { useTaskStore, Task, TaskStatus } from '@/stores/Task'
+import StandardButton from '@/styling/StandardButton.vue'
 
 class State {
   task: Task = new Task()
@@ -20,6 +21,6 @@ function createTask() {
 <template>
   <div>
     <input v-model="state.task.name" />
-    <button @click="createTask">Create Task</button>
+    <StandardButton label="Create Task" @click="createTask" />
   </div>
 </template>
