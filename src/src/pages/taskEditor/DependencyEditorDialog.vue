@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from 'vue'
 import { type Task, useTaskStore } from '@/stores/Task'
+import TmDialog from '@/styling/TmDialog.vue'
 
 const model = defineModel<boolean>()
 
@@ -52,7 +53,7 @@ fetchTask()
 </script>
 
 <template>
-  <q-dialog v-model="model">
+  <TmDialog v-model="model">
     <q-card>
       <q-card-section>
         <h2>Add Dependency</h2>
@@ -99,5 +100,5 @@ fetchTask()
         <q-btn flat label="Save Changes" color="primary" v-close-popup @click="exitSavingChanges" />
       </q-card-actions>
     </q-card>
-  </q-dialog>
+  </TmDialog>
 </template>
