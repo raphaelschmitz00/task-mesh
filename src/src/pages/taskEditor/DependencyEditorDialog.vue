@@ -4,6 +4,8 @@ import { type Task, useTaskStore } from '@/stores/Task'
 import TmDialog from '@/components/dialogs/TmDialog.vue'
 import TmCard from '@/components/cards/TmCard.vue'
 import TmCardSection from '@/components/cards/TmCardSection.vue'
+import TmList from '@/components/lists/TmList.vue'
+import TmActionItem from '@/components/lists/TmActionItem.vue'
 
 const model = defineModel<boolean>()
 
@@ -63,38 +65,28 @@ fetchTask()
 
       <TmCardSection class="q-pt-none">
         <span>Required Tasks</span>
-        <q-list bordered>
-          <q-item
+        <TmList hasBorder>
+          <TmActionItem
             v-for="requiredTask in state.chosenTasks"
             :key="requiredTask.key"
-            clickable
-            v-ripple
+            :label="requiredTask.name"
+            icon="remove_circle"
             @click="removeDependency(requiredTask)"
-          >
-            <q-item-section>{{ requiredTask.name }}</q-item-section>
-            <q-item-section avatar>
-              <q-icon color="primary" name="remove_circle" />
-            </q-item-section>
-          </q-item>
-        </q-list>
+          />
+        </TmList>
       </TmCardSection>
 
       <TmCardSection class="q-pt-none">
         <span>Available</span>
-        <q-list bordered>
-          <q-item
+        <TmList hasBorder>
+          <TmActionItem
             v-for="requiredTask in unchosenTasks"
             :key="requiredTask.key"
-            clickable
-            v-ripple
+            :label="requiredTask.name"
+            icon="add_circle"
             @click="addDependency(requiredTask)"
-          >
-            <q-item-section>{{ requiredTask.name }}</q-item-section>
-            <q-item-section avatar>
-              <q-icon color="primary" name="add_circle" />
-            </q-item-section>
-          </q-item>
-        </q-list>
+          />
+        </TmList>
       </TmCardSection>
 
       <q-card-actions align="right">
