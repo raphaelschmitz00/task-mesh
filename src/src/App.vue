@@ -23,9 +23,10 @@ const basePath = import.meta.env.BASE_URL;
           icon="menu"
         />
         <q-btn
-          flat
-          round
           :icon="`img:${basePath}logo.svg`"
+          color="white"
+          round
+          unelevated
           @click="router.push('/')"
         />
         <q-toolbar-title>Task Mesh</q-toolbar-title>

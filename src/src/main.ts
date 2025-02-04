@@ -13,7 +13,17 @@ import router from "./pages/router";
 const app = createApp(App);
 
 app.use(createPinia());
-app.use(Quasar, { plugins: {}, iconSet });
+
+app.use(Quasar, {
+  plugins: {},
+  iconSet,
+  config: {
+    brand: {
+      primary: "#19AFD2",
+    },
+  },
+});
+
 app.use(router);
 
 app.mount("#app");
