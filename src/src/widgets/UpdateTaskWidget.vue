@@ -1,30 +1,30 @@
 <script setup lang="ts">
-import { reactive, watch } from 'vue'
-import { useTaskStore, Task } from '@/stores/Task'
+import { reactive, watch } from "vue";
+import { useTaskStore, Task } from "@/stores/Task";
 
 const props = defineProps<{
-  task: Task
-}>()
+  task: Task;
+}>();
 
 const emit = defineEmits<{
-  updated: []
-}>()
+  updated: [];
+}>();
 
 class State {
-  task: Task = { ...props.task }
+  task: Task = { ...props.task };
 }
 
-const state = reactive(new State())
-const taskStore = useTaskStore()
+const state = reactive(new State());
+const taskStore = useTaskStore();
 
 watch(props, (newProps) => {
-  state.task = newProps.task
-})
+  state.task = newProps.task;
+});
 
 function updateTask() {
-  taskStore.update(state.task)
-  emit('updated')
-  console.log(`updated ${JSON.stringify(state.task)}`)
+  taskStore.update(state.task);
+  emit("updated");
+  console.log(`updated ${JSON.stringify(state.task)}`);
 }
 </script>
 

@@ -1,27 +1,27 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { type Task, TaskStatus, useTaskStore } from '@/stores/Task'
-import TaskStatusEditor from '@/widgets/TaskStatusDropdown.vue'
-import UpdateTaskWidget from '@/widgets/UpdateTaskWidget.vue'
+import { reactive } from "vue";
+import { type Task, TaskStatus, useTaskStore } from "@/stores/Task";
+import TaskStatusEditor from "@/widgets/TaskStatusDropdown.vue";
+import UpdateTaskWidget from "@/widgets/UpdateTaskWidget.vue";
 
 const props = defineProps<{
-  task: Task
-}>()
+  task: Task;
+}>();
 
 class State {
-  isEditing = false
+  isEditing = false;
 }
 
-const state = reactive(new State())
+const state = reactive(new State());
 
-const taskStore = useTaskStore()
+const taskStore = useTaskStore();
 
 function updateStatus(status: TaskStatus) {
-  taskStore.update({ ...props.task, status })
+  taskStore.update({ ...props.task, status });
 }
 
 function deleteTask() {
-  taskStore.remove(props.task)
+  taskStore.remove(props.task);
 }
 </script>
 

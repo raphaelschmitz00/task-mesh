@@ -1,11 +1,11 @@
 <script setup lang="ts">
 const props = defineProps<{
-  label: string
-}>()
+  label: string;
+}>();
 
 const emit = defineEmits<{
-  click: []
-}>()
+  click: [];
+}>();
 </script>
 
 <template>

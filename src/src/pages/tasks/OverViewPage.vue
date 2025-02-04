@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useTaskStore } from '@/stores/Task'
-import CreateTaskWidget from '@/widgets/CreateTaskWidget.vue'
-import TaskEntryView from './TaskEntryView.vue'
+import { useTaskStore } from "@/stores/Task";
+import CreateTaskWidget from "@/widgets/CreateTaskWidget.vue";
+import TaskEntryView from "./TaskEntryView.vue";
 
-const taskStore = useTaskStore()
+const taskStore = useTaskStore();
 </script>
 
 <template>
