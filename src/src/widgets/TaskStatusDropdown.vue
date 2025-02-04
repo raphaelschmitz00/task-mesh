@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { TaskStatus, allTaskStatuses, getTaskStatusName } from '@/stores/Task'
-import StandardSelect from '@/styling/StandardSelect.vue'
+import StandardSelect from '@/components/forms/TmSelect.vue'
 
 const model = defineModel<TaskStatus>()
 </script>

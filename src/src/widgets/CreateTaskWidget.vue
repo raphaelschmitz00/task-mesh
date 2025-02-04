@@ -2,7 +2,7 @@
 import { reactive } from 'vue'
 import { useTaskStore, Task, TaskStatus } from '@/stores/Task'
 import StandardButton from '@/components/buttons/TmButton.vue'
-import StandardInput from '@/styling/StandardInput.vue'
+import StandardInput from '@/components/forms/TmInput.vue'
 import TmCard from '@/components/cards/TmCard.vue'
 import TmCardSection from '@/components/cards/TmCardSection.vue'
 
