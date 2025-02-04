@@ -5,10 +5,11 @@ import { RouterView, useRouter } from "vue-router";
 class State {
   drawerIsOpen: boolean = false;
 }
-
 const state = reactive(new State());
 
 const router = useRouter();
+
+const basePath = import.meta.env.BASE_URL;
 </script>
 
 <template>
@@ -21,7 +22,12 @@ const router = useRouter();
           round
           icon="menu"
         />
-        <q-btn flat round icon="img:/logo.svg" @click="router.push('/')" />
+        <q-btn
+          flat
+          round
+          :icon="`img:${basePath}logo.svg`"
+          @click="router.push('/')"
+        />
         <q-toolbar-title>Task Mesh</q-toolbar-title>
       </q-toolbar>
     </q-header>
