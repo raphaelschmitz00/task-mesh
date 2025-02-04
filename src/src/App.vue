@@ -2,7 +2,6 @@
 import { reactive } from "vue";
 import { RouterView, useRouter } from "vue-router";
 import TmList from "./components/lists/TmList.vue";
-import TmActionItem from "./components/lists/TmActionItem.vue";
 import TmListItem from "./components/lists/TmListItem.vue";
 
 class State {
