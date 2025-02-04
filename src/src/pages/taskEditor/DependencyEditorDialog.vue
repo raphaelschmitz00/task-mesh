@@ -6,6 +6,8 @@ import TmCard from '@/components/cards/TmCard.vue'
 import TmCardSection from '@/components/cards/TmCardSection.vue'
 import TmList from '@/components/lists/TmList.vue'
 import TmActionItem from '@/components/lists/TmActionItem.vue'
+import TmCardActionSection from '@/components/cards/TmCardActionSection.vue'
+import TmFlatButton from '@/components/buttons/TmFlatButton.vue'
 
 const model = defineModel<boolean>()
 
@@ -89,10 +91,10 @@ fetchTask()
         </TmList>
       </TmCardSection>
 
-      <q-card-actions align="right">
-        <q-btn flat label="Cancel" color="primary" v-close-popup @click="exitDiscardingChanges" />
-        <q-btn flat label="Save Changes" color="primary" v-close-popup @click="exitSavingChanges" />
-      </q-card-actions>
+      <TmCardActionSection>
+        <TmFlatButton label="Cancel" @click="exitDiscardingChanges" />
+        <TmFlatButton label="Save Changes" @click="exitSavingChanges" />
+      </TmCardActionSection>
     </TmCard>
   </TmDialog>
 </template>
