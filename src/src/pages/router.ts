@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import OverViewPage from "@/pages/tasks/OverViewPage.vue";
+import StatusBoardPage from "./status/StatusBoardPage.vue";
 
 export default createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,18 +7,17 @@ export default createRouter({
     {
       name: "home",
       path: "/",
-      component: OverViewPage,
-    },
-    {
-      name: "status",
-      path: "/status",
-      component: () => import("@/pages/status/StatusBoardPage.vue"),
+      component: StatusBoardPage,
     },
     {
       name: "task-editor",
       path: "/task/:idString",
       props: true,
-      component: () => import("@/pages/taskEditor/TaskEditorPage.vue"),
+      component: () => import("./taskEditor/TaskEditorPage.vue"),
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      component: () => import("./NotFoundPage.vue"),
     },
   ],
 });

@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 import { RouterView, useRouter } from "vue-router";
+import TmList from "./components/lists/TmList.vue";
+import TmActionItem from "./components/lists/TmActionItem.vue";
+import TmListItem from "./components/lists/TmListItem.vue";
 
 class State {
   drawerIsOpen: boolean = false;
@@ -41,12 +44,11 @@ const basePath = import.meta.env.BASE_URL;
     >
       <q-scroll-area class="fit">
         <nav>
-          <div>
-            <RouterLink to="/">Home</RouterLink>
-          </div>
-          <div>
-            <RouterLink to="/status">Status Board</RouterLink>
-          </div>
+          <TmList>
+            <TmListItem>
+              <RouterLink to="/">Status Board</RouterLink>
+            </TmListItem>
+          </TmList>
         </nav>
       </q-scroll-area>
     </q-drawer>
