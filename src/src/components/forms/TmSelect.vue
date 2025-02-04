@@ -1,12 +1,12 @@
 <script setup lang="ts">
-const model = defineModel()
+const model = defineModel();
 
 const props = defineProps<{
-  label?: string
-  options: readonly unknown[]
+  label?: string;
+  options: readonly unknown[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  optionLabel?: (option: any) => string
-}>()
+  optionLabel?: (option: any) => string;
+}>();
 </script>
 
 <template>

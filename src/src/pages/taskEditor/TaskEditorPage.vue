@@ -1,48 +1,48 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { useRouter } from 'vue-router'
-import { type Task, useTaskStore } from '@/stores/Task'
-import TaskStatusDropdown from '@/widgets/TaskStatusDropdown.vue'
-import TaskStatusView from '@/widgets/TaskStatusView.vue'
-import StandardButton from '@/components/buttons/TmButton.vue'
-import DependencyEditorDialog from './DependencyEditorDialog.vue'
-import TmCard from '@/components/cards/TmCard.vue'
-import TmCardSection from '@/components/cards/TmCardSection.vue'
+import { reactive } from "vue";
+import { useRouter } from "vue-router";
+import { type Task, useTaskStore } from "@/stores/Task";
+import TaskStatusDropdown from "@/widgets/TaskStatusDropdown.vue";
+import TaskStatusView from "@/widgets/TaskStatusView.vue";
+import StandardButton from "@/components/buttons/TmButton.vue";
+import DependencyEditorDialog from "./DependencyEditorDialog.vue";
+import TmCard from "@/components/cards/TmCard.vue";
+import TmCardSection from "@/components/cards/TmCardSection.vue";
 
 const props = defineProps<{
-  idString: string
-}>()
+  idString: string;
+}>();
 
 class State {
-  addDependencyDialogIsShown = false
-  task?: Task
+  addDependencyDialogIsShown = false;
+  task?: Task;
 }
 
-const state = reactive(new State())
+const state = reactive(new State());
 
-const taskStore = useTaskStore()
-const router = useRouter()
+const taskStore = useTaskStore();
+const router = useRouter();
 
 function openDependencyDialog() {
-  state.addDependencyDialogIsShown = true
+  state.addDependencyDialogIsShown = true;
 }
 
 function fetchTask() {
-  const id = parseInt(props.idString)
-  state.task = taskStore.get(id)
+  const id = parseInt(props.idString);
+  state.task = taskStore.get(id);
 }
 
 function updateTask() {
-  taskStore.update(state.task!)
-  router.back()
+  taskStore.update(state.task!);
+  router.back();
 }
 
 function deleteTask() {
-  taskStore.remove(state.task!)
-  router.back()
+  taskStore.remove(state.task!);
+  router.back();
 }
 
-fetchTask()
+fetchTask();
 </script>
 
 <template>
@@ -59,13 +59,18 @@ fetchTask()
       </div>
 
       <StandardButton icon="add" label="Add" @click="openDependencyDialog" />
-      <DependencyEditorDialog v-model="state.addDependencyDialogIsShown" :task="state.task"
+      <DependencyEditorDialog
+        v-model="state.addDependencyDialogIsShown"
+        :task="state.task"
     /></TmCardSection>
 
     <TmCardSection>
       <div>
         <TaskStatusView :status="state.task.status" class="statusRowItem" />
-        <TaskStatusDropdown :model-value="state.task.status" class="statusRowItem" />
+        <TaskStatusDropdown
+          :model-value="state.task.status"
+          class="statusRowItem"
+        />
       </div>
     </TmCardSection>
 

@@ -1,27 +1,37 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { RouterView, useRouter } from 'vue-router'
+import { reactive } from "vue";
+import { RouterView, useRouter } from "vue-router";
 
 class State {
-  drawerIsOpen: boolean = false
+  drawerIsOpen: boolean = false;
 }
 
-const state = reactive(new State())
+const state = reactive(new State());
 
-const router = useRouter()
+const router = useRouter();
 </script>
 
 <template>
   <q-layout view="hhh LpR fff">
     <q-header elevated reveal>
       <q-toolbar>
-        <q-btn flat @click="state.drawerIsOpen = !state.drawerIsOpen" round icon="menu" />
+        <q-btn
+          flat
+          @click="state.drawerIsOpen = !state.drawerIsOpen"
+          round
+          icon="menu"
+        />
         <q-btn flat round icon="img:/logo.svg" @click="router.push('/')" />
         <q-toolbar-title>Task Mesh</q-toolbar-title>
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="state.drawerIsOpen" :width="200" :breakpoint="700" elevated>
+    <q-drawer
+      v-model="state.drawerIsOpen"
+      :width="200"
+      :breakpoint="700"
+      elevated
+    >
       <q-scroll-area class="fit">
         <nav>
           <div>

@@ -1,14 +1,14 @@
 <script setup lang="ts">
-const model = defineModel<string>()
+const model = defineModel<string>();
 
 const props = defineProps<{
-  label?: string
-  class?: string
-}>()
+  label?: string;
+  class?: string;
+}>();
 
 const emit = defineEmits<{
-  onEnter: []
-}>()
+  onEnter: [];
+}>();
 </script>
 
 <template>

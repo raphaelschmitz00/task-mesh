@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { useTaskStore, Task, TaskStatus } from '@/stores/Task'
-import StandardButton from '@/components/buttons/TmButton.vue'
-import StandardInput from '@/components/forms/TmInput.vue'
-import TmCard from '@/components/cards/TmCard.vue'
-import TmCardSection from '@/components/cards/TmCardSection.vue'
+import { reactive } from "vue";
+import { useTaskStore, Task, TaskStatus } from "@/stores/Task";
+import StandardButton from "@/components/buttons/TmButton.vue";
+import StandardInput from "@/components/forms/TmInput.vue";
+import TmCard from "@/components/cards/TmCard.vue";
+import TmCardSection from "@/components/cards/TmCardSection.vue";
 
 class State {
-  task: Task = new Task()
+  task: Task = new Task();
 }
 
-const state = reactive(new State())
+const state = reactive(new State());
 
-const taskStore = useTaskStore()
+const taskStore = useTaskStore();
 
 function createTask() {
-  taskStore.addCopy(state.task)
-  state.task.status = TaskStatus.ToDo
-  state.task.name = ''
+  taskStore.addCopy(state.task);
+  state.task.status = TaskStatus.ToDo;
+  state.task.name = "";
 }
 </script>
 

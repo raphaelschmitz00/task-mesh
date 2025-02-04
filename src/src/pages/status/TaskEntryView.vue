@@ -1,27 +1,29 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { type Task } from '@/stores/Task'
-import UpdateTaskWidget from '@/widgets/UpdateTaskWidget.vue'
-import TaskStatusView from '@/widgets/TaskStatusView.vue'
-import LinkButton from '@/components/buttons/TmLinkButton.vue'
-import TmCard from '@/components/cards/TmCard.vue'
-import TmCardSection from '@/components/cards/TmCardSection.vue'
+import { reactive } from "vue";
+import { type Task } from "@/stores/Task";
+import UpdateTaskWidget from "@/widgets/UpdateTaskWidget.vue";
+import TaskStatusView from "@/widgets/TaskStatusView.vue";
+import LinkButton from "@/components/buttons/TmLinkButton.vue";
+import TmCard from "@/components/cards/TmCard.vue";
+import TmCardSection from "@/components/cards/TmCardSection.vue";
 
 const props = defineProps<{
-  task: Task
-}>()
+  task: Task;
+}>();
 
 class State {
-  isEditing = false
+  isEditing = false;
 }
 
-const state = reactive(new State())
+const state = reactive(new State());
 </script>
 
 <template>
   <TmCard>
     <TmCardSection>
-      <div v-if="props.task.dependsOn.length">Depends on {{ props.task.dependsOn.length }}</div>
+      <div v-if="props.task.dependsOn.length">
+        Depends on {{ props.task.dependsOn.length }}
+      </div>
       <div>
         <TaskStatusView :status="props.task.status" />
         # {{ props.task.key }} -

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const props = defineProps<{
-  hasBorder: boolean
-}>()
+  hasBorder: boolean;
+}>();
 </script>
 
 <template>
