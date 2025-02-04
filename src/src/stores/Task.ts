@@ -18,8 +18,9 @@ export function getTaskStatusName(status: TaskStatus) {
 
 export class Task {
   key: number = -1
-  status: TaskStatus = TaskStatus.ToDo
   name: string = ''
+  status: TaskStatus = TaskStatus.ToDo
+  dependsOn: number[] = []
 }
 
 const refTasks = ref(new Array<Task>())
@@ -34,7 +35,9 @@ export const useTaskStore = defineStore('Tasks', () => {
       key: keyCounter++,
       status: task.status,
       name: task.name,
+      dependsOn: [...task.dependsOn],
     }
+
     refTasks.value.push(newTask)
     return newTask
   }

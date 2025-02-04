@@ -15,5 +15,6 @@ const props = defineProps<{
     :label="props.label"
     :options="props.options"
     :option-label="optionLabel"
+    filled
   />
 </template>

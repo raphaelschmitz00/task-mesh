@@ -5,14 +5,20 @@ export default createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
       name: 'home',
+      path: '/',
       component: OverViewPage,
     },
     {
-      path: '/status',
       name: 'status',
-      component: () => import('../pages/status/StatusBoardPage.vue'),
+      path: '/status',
+      component: () => import('@/pages/status/StatusBoardPage.vue'),
+    },
+    {
+      name: 'task-editor',
+      path: '/task/:idString',
+      props: true,
+      component: () => import('@/pages/taskEditor/TaskEditorPage.vue'),
     },
   ],
 })
