@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from 'vue'
 import { type Task, useTaskStore } from '@/stores/Task'
-import TmDialog from '@/styling/TmDialog.vue'
+import TmDialog from '@/components/dialogs/TmDialog.vue'
+import TmCard from '@/components/cards/TmCard.vue'
+import TmCardSection from '@/components/cards/TmCardSection.vue'
 
 const model = defineModel<boolean>()
 
@@ -54,12 +56,12 @@ fetchTask()
 
 <template>
   <TmDialog v-model="model">
-    <q-card>
-      <q-card-section>
+    <TmCard>
+      <TmCardSection>
         <h2>Add Dependency</h2>
-      </q-card-section>
+      </TmCardSection>
 
-      <q-card-section class="q-pt-none">
+      <TmCardSection class="q-pt-none">
         <span>Required Tasks</span>
         <q-list bordered>
           <q-item
@@ -75,9 +77,9 @@ fetchTask()
             </q-item-section>
           </q-item>
         </q-list>
-      </q-card-section>
+      </TmCardSection>
 
-      <q-card-section class="q-pt-none">
+      <TmCardSection class="q-pt-none">
         <span>Available</span>
         <q-list bordered>
           <q-item
@@ -93,12 +95,12 @@ fetchTask()
             </q-item-section>
           </q-item>
         </q-list>
-      </q-card-section>
+      </TmCardSection>
 
       <q-card-actions align="right">
         <q-btn flat label="Cancel" color="primary" v-close-popup @click="exitDiscardingChanges" />
         <q-btn flat label="Save Changes" color="primary" v-close-popup @click="exitSavingChanges" />
       </q-card-actions>
-    </q-card>
+    </TmCard>
   </TmDialog>
 </template>
