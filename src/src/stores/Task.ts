@@ -1,4 +1,4 @@
-import { computed, ref } from "vue";
+import { computed, reactive } from "vue";
 import { defineStore } from "pinia";
 
 export enum TaskStatus {
@@ -27,40 +27,37 @@ export class Task {
   dependsOn: number[] = [];
 }
 
-const refTasks = ref(new Array<Task>());
+const tasks = reactive(new Map<number, Task>());
 
 export const useTaskStore = defineStore("Tasks", () => {
   let keyCounter = 0;
 
-  const allTasks = computed(() => refTasks.value.map((x) => x));
+  const allTasks = computed(() => Array.from(tasks, ([, value]) => value));
 
   function addCopy(task: Task) {
+    const id = keyCounter++;
     const newTask: Task = {
-      key: keyCounter++,
+      key: id,
       status: task.status,
       name: task.name,
       dependsOn: [...task.dependsOn],
     };
 
-    refTasks.value.push(newTask);
+    tasks.set(id, newTask);
     return newTask;
   }
 
-  function get(key: number) {
-    return refTasks.value.filter((x) => x.key === key)[0];
+  function get(id: number) {
+    return tasks.get(id);
   }
 
   function update(task: Task) {
-    refTasks.value[task.key] = { ...refTasks.value[task.key], ...task };
-
-    const storedTask = refTasks.value[task.key];
-    storedTask.status = task.status;
-    storedTask.name = task.name;
+    const storedTask = tasks.get(task.key);
+    tasks.set(task.key, { ...storedTask, ...task });
   }
 
   function remove(task: Task) {
-    const index = refTasks.value.findIndex((x) => x.key === task.key);
-    refTasks.value.splice(index, 1);
+    tasks.delete(task.key);
   }
 
   return { addCopy, get, allTasks, update, remove };
