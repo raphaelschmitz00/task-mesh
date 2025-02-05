@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive } from "vue";
 import { useRouter } from "vue-router";
-import { useTaskStore } from "@/stores/Task";
+import { TaskStatus, useTaskStore } from "@/stores/Task";
 import TaskStatusDropdown from "@/widgets/TaskStatusDropdown.vue";
 import TaskStatusView from "@/widgets/TaskStatusView.vue";
 import StandardButton from "@/components/buttons/TmButton.vue";
@@ -19,10 +19,13 @@ class State {
 
 const state = reactive(new State());
 
-const task = computed(() => taskStore.get(parseInt(props.idString)));
-
 const taskStore = useTaskStore();
 const router = useRouter();
+
+const task = computed(() => taskStore.get(parseInt(props.idString)));
+const requiredTasks = taskStore.allTasks.filter((x) =>
+  task.value?.dependsOn.includes(x.key),
+);
 
 function openDependencyDialog() {
   state.addDependencyDialogIsShown = true;
@@ -46,10 +49,13 @@ function deleteTask() {
     </TmCardSection>
 
     <TmCardSection
-      ><div v-if="!task.dependsOn.length">No Dependencies</div>
+      ><div v-if="!requiredTasks.length">No Dependencies</div>
       <div v-else>
         Depends on: <br />
-        <div v-for="id in task.dependsOn" :key="id">Task # {{ id }}</div>
+        <div v-for="task in requiredTasks" :key="task.id">
+          Task # {{ task.key }}
+          {{ task.status === TaskStatus.Done ? "✔" : "❌" }}
+        </div>
       </div>
 
       <StandardButton icon="add" label="Add" @click="openDependencyDialog" />
