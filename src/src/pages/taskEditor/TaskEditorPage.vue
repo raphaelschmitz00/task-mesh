@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { reactive } from "vue";
+import { computed, reactive } from "vue";
 import { useRouter } from "vue-router";
-import { type Task, useTaskStore } from "@/stores/Task";
+import { useTaskStore } from "@/stores/Task";
 import TaskStatusDropdown from "@/widgets/TaskStatusDropdown.vue";
 import TaskStatusView from "@/widgets/TaskStatusView.vue";
 import StandardButton from "@/components/buttons/TmButton.vue";
@@ -15,10 +15,11 @@ const props = defineProps<{
 
 class State {
   addDependencyDialogIsShown = false;
-  task?: Task;
 }
 
 const state = reactive(new State());
+
+const task = computed(() => taskStore.get(parseInt(props.idString)));
 
 const taskStore = useTaskStore();
 const router = useRouter();
@@ -27,50 +28,40 @@ function openDependencyDialog() {
   state.addDependencyDialogIsShown = true;
 }
 
-function fetchTask() {
-  const id = parseInt(props.idString);
-  state.task = taskStore.get(id);
-}
-
 function updateTask() {
-  taskStore.update(state.task!);
+  taskStore.update(task.value!);
   router.back();
 }
 
 function deleteTask() {
-  taskStore.remove(state.task!);
+  taskStore.remove(task.value!);
   router.back();
 }
-
-fetchTask();
 </script>
 
 <template>
-  <TmCard v-if="state.task">
+  <TmCard v-if="task">
     <TmCardSection>
-      <h1>{{ `#${state.task.key} - ${state.task.name}` }}</h1>
+      <h1>{{ `#${task.key} - ${task.name}` }}</h1>
     </TmCardSection>
 
     <TmCardSection
-      ><div v-if="!state.task.dependsOn.length">No Dependencies</div>
+      ><div v-if="!task.dependsOn.length">No Dependencies</div>
       <div v-else>
         Depends on: <br />
-        <div v-for="id in state.task.dependsOn" :key="id">Task # {{ id }}</div>
+        <div v-for="id in task.dependsOn" :key="id">Task # {{ id }}</div>
       </div>
 
       <StandardButton icon="add" label="Add" @click="openDependencyDialog" />
       <DependencyEditorDialog
         v-model="state.addDependencyDialogIsShown"
-        :task="state.task"
+        :task="task"
     /></TmCardSection>
 
     <TmCardSection>
       <div>
-        <TaskStatusView :status="state.task.status" class="statusRowItem" />
-        <TaskStatusDropdown
-          :model-value="state.task.status"
-          class="statusRowItem"
-        />
+        <TaskStatusView :status="task.status" class="statusRowItem" />
+        <TaskStatusDropdown :model-value="task.status" class="statusRowItem" />
       </div>
     </TmCardSection>
 
