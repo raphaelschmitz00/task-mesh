@@ -23,8 +23,10 @@ const taskStore = useTaskStore();
 const router = useRouter();
 
 const task = computed(() => taskStore.get(parseInt(props.idString)));
-const requiredTasks = taskStore.allTasks.filter((x) =>
-  task.value?.dependsOn.includes(x.key),
+const requiredTasks = taskStore.allTasks.filter(
+  (x) =>
+    task.value?.status !== TaskStatus.Done &&
+    task.value?.dependsOn.includes(x.key),
 );
 
 function openDependencyDialog() {
@@ -49,12 +51,11 @@ function deleteTask() {
     </TmCardSection>
 
     <TmCardSection
-      ><div v-if="!requiredTasks.length">No Dependencies</div>
+      ><div v-if="!requiredTasks.length">✔ Can be started</div>
       <div v-else>
-        Depends on: <br />
-        <div v-for="task in requiredTasks" :key="task.id">
+        ❌ Blocked by: <br />
+        <div v-for="task in requiredTasks" :key="task.key">
           Task # {{ task.key }}
-          {{ task.status === TaskStatus.Done ? "✔" : "❌" }}
         </div>
       </div>
 
