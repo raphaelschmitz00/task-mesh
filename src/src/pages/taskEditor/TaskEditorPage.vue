@@ -26,7 +26,7 @@ const task = computed(() => taskStore.get(parseInt(props.idString)));
 const requiredTasks = taskStore.allTasks.filter(
   (x) =>
     task.value?.status !== TaskStatus.Done &&
-    task.value?.dependsOn.includes(x.key),
+    task.value?.dependsOn.includes(x.id),
 );
 
 function openDependencyDialog() {
@@ -47,15 +47,15 @@ function deleteTask() {
 <template>
   <TmCard v-if="task">
     <TmCardSection>
-      <h1>{{ `#${task.key} - ${task.name}` }}</h1>
+      <h1>{{ `#${task.id} - ${task.name}` }}</h1>
     </TmCardSection>
 
     <TmCardSection
       ><div v-if="!requiredTasks.length">✔ Can be started</div>
       <div v-else>
         ❌ Blocked by: <br />
-        <div v-for="task in requiredTasks" :key="task.key">
-          Task # {{ task.key }}
+        <div v-for="task in requiredTasks" :key="task.id">
+          Task # {{ task.id }}
         </div>
       </div>
 

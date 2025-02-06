@@ -24,13 +24,13 @@ const dones = computed(() => getWithStatus(TaskStatus.Done));
     </div>
     <div>
       <div class="taskColumn">
-        <TaskEntryView v-for="task in todos" :key="task.key" :task="task" />
+        <TaskEntryView v-for="task in todos" :key="task.id" :task="task" />
       </div>
       <div class="taskColumn">
-        <TaskEntryView v-for="task in doings" :key="task.key" :task="task" />
+        <TaskEntryView v-for="task in doings" :key="task.id" :task="task" />
       </div>
       <div class="taskColumn">
-        <TaskEntryView v-for="task in dones" :key="task.key" :task="task" />
+        <TaskEntryView v-for="task in dones" :key="task.id" :task="task" />
       </div>
     </div>
     <CreateTaskWidget />

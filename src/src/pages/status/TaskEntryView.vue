@@ -26,7 +26,7 @@ const state = reactive(new State());
       </div>
       <div>
         <TaskStatusView :status="props.task.status" />
-        # {{ props.task.key }} -
+        # {{ props.task.id }} -
         <UpdateTaskWidget
           v-if="state.isEditing"
           :task="props.task"
@@ -34,7 +34,7 @@ const state = reactive(new State());
         />
         <span v-else> {{ props.task.name }}</span>
       </div>
-      <LinkButton icon="edit" label="Edit" :path="`task/${props.task.key}`" />
+      <LinkButton icon="edit" label="Edit" :path="`task/${props.task.id}`" />
     </TmCardSection>
   </TmCard>
 </template>
