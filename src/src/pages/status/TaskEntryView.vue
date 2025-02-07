@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { reactive } from "vue";
-import { type Task } from "@/stores/Task";
+import { computed, reactive } from "vue";
+import { type Task, useTaskStore } from "@/stores/Task";
 import UpdateTaskWidget from "@/widgets/UpdateTaskWidget.vue";
 import TaskStatusView from "@/widgets/TaskStatusView.vue";
 import LinkButton from "@/components/buttons/TmLinkButton.vue";
@@ -16,17 +16,18 @@ class State {
 }
 
 const state = reactive(new State());
+
+const taskStore = useTaskStore();
+const blockingTasks = computed(() => taskStore.getBlockingTasks(props.task));
 </script>
 
 <template>
   <TmCard>
     <TmCardSection>
-      <div v-if="props.task.dependsOn.length">
-        Depends on {{ props.task.dependsOn.length }}
-      </div>
+      <div v-if="blockingTasks.length">❌ Is Blocked</div>
       <div>
         <TaskStatusView :status="props.task.status" />
-        # {{ props.task.key }} -
+        # {{ props.task.id }} -
         <UpdateTaskWidget
           v-if="state.isEditing"
           :task="props.task"
@@ -34,7 +35,7 @@ const state = reactive(new State());
         />
         <span v-else> {{ props.task.name }}</span>
       </div>
-      <LinkButton icon="edit" label="Edit" :path="`task/${props.task.key}`" />
+      <LinkButton icon="edit" label="Edit" :path="`task/${props.task.id}`" />
     </TmCardSection>
   </TmCard>
 </template>

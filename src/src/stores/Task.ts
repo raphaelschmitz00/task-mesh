@@ -21,7 +21,7 @@ export function getTaskStatusName(status: TaskStatus) {
 }
 
 export class Task {
-  key: number = -1;
+  id: number = -1;
   name: string = "";
   status: TaskStatus = TaskStatus.ToDo;
   dependsOn: number[] = [];
@@ -37,7 +37,7 @@ export const useTaskStore = defineStore("Tasks", () => {
   function addCopy(task: Task) {
     const id = keyCounter++;
     const newTask: Task = {
-      key: id,
+      id: id,
       status: task.status,
       name: task.name,
       dependsOn: [...task.dependsOn],
@@ -52,13 +52,19 @@ export const useTaskStore = defineStore("Tasks", () => {
   }
 
   function update(task: Task) {
-    const storedTask = tasks.get(task.key);
-    tasks.set(task.key, { ...storedTask, ...task });
+    const storedTask = tasks.get(task.id);
+    tasks.set(task.id, { ...storedTask, ...task });
   }
 
   function remove(task: Task) {
-    tasks.delete(task.key);
+    tasks.delete(task.id);
   }
 
-  return { addCopy, get, allTasks, update, remove };
+  function getBlockingTasks(task: Task) {
+    return allTasks.value.filter(
+      (x) => task.dependsOn.includes(x.id) && x.status !== TaskStatus.Done,
+    );
+  }
+
+  return { addCopy, get, allTasks, update, remove, getBlockingTasks };
 });

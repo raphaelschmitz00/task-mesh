@@ -33,7 +33,7 @@ const unchosenTasks = computed(() =>
 function fetchTask() {
   state.availableTasks = taskStore.allTasks.filter((x) => x != props.task);
   state.chosenTasks = state.availableTasks.filter((x) =>
-    props.task.dependsOn.includes(x.key),
+    props.task.dependsOn.includes(x.id),
   );
 }
 
@@ -46,7 +46,7 @@ function removeDependency(task: Task) {
 }
 
 function exitSavingChanges() {
-  const chosenIds = state.chosenTasks.map((x) => x.key);
+  const chosenIds = state.chosenTasks.map((x) => x.id);
   taskStore.update({ ...props.task, dependsOn: chosenIds });
   model.value = false;
 }
@@ -72,7 +72,7 @@ fetchTask();
         <TmList hasBorder>
           <TmActionItem
             v-for="requiredTask in state.chosenTasks"
-            :key="requiredTask.key"
+            :key="requiredTask.id"
             :label="requiredTask.name"
             icon="remove_circle"
             @click="removeDependency(requiredTask)"
@@ -85,7 +85,7 @@ fetchTask();
         <TmList hasBorder>
           <TmActionItem
             v-for="requiredTask in unchosenTasks"
-            :key="requiredTask.key"
+            :key="requiredTask.id"
             :label="requiredTask.name"
             icon="add_circle"
             @click="addDependency(requiredTask)"

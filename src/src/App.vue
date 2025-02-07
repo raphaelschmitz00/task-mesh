@@ -57,11 +57,5 @@ const basePath = import.meta.env.BASE_URL;
         <RouterView />
       </q-page>
     </q-page-container>
-
-    <q-footer>
-      <q-toolbar>
-        <q-toolbar-title>Footer</q-toolbar-title>
-      </q-toolbar>
-    </q-footer>
   </q-layout>
 </template>

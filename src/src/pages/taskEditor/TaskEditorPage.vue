@@ -19,10 +19,11 @@ class State {
 
 const state = reactive(new State());
 
-const task = computed(() => taskStore.get(parseInt(props.idString)));
-
 const taskStore = useTaskStore();
 const router = useRouter();
+
+const task = computed(() => taskStore.get(parseInt(props.idString)));
+const blockingTasks = computed(() => taskStore.getBlockingTasks(task.value!));
 
 function openDependencyDialog() {
   state.addDependencyDialogIsShown = true;
@@ -42,21 +43,24 @@ function deleteTask() {
 <template>
   <TmCard v-if="task">
     <TmCardSection>
-      <h1>{{ `#${task.key} - ${task.name}` }}</h1>
+      <h1>{{ `#${task.id} - ${task.name}` }}</h1>
     </TmCardSection>
 
-    <TmCardSection
-      ><div v-if="!task.dependsOn.length">No Dependencies</div>
+    <TmCardSection>
+      <div v-if="!blockingTasks.length">✔ Can be started</div>
       <div v-else>
-        Depends on: <br />
-        <div v-for="id in task.dependsOn" :key="id">Task # {{ id }}</div>
+        ❌ Blocked by: <br />
+        <div v-for="task in blockingTasks" :key="task.id">
+          {{ `${task.name} (#${task.id})` }}
+        </div>
       </div>
 
       <StandardButton icon="add" label="Add" @click="openDependencyDialog" />
       <DependencyEditorDialog
         v-model="state.addDependencyDialogIsShown"
         :task="task"
-    /></TmCardSection>
+      />
+    </TmCardSection>
 
     <TmCardSection>
       <div>
@@ -67,8 +71,8 @@ function deleteTask() {
 
     <TmCardSection>
       <StandardButton icon="delete" label="Delete" @click="deleteTask" />
-      <StandardButton icon="save" label="Save" @click="updateTask"
-    /></TmCardSection>
+      <StandardButton icon="save" label="Save" @click="updateTask" />
+    </TmCardSection>
   </TmCard>
 </template>
 
