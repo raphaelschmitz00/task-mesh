@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive } from "vue";
 import { useRouter } from "vue-router";
-import { TaskStatus, useTaskStore } from "@/stores/Task";
+import { useTaskStore } from "@/stores/Task";
 import TaskStatusDropdown from "@/widgets/TaskStatusDropdown.vue";
 import TaskStatusView from "@/widgets/TaskStatusView.vue";
 import StandardButton from "@/components/buttons/TmButton.vue";
@@ -23,11 +23,7 @@ const taskStore = useTaskStore();
 const router = useRouter();
 
 const task = computed(() => taskStore.get(parseInt(props.idString)));
-const requiredTasks = taskStore.allTasks.filter(
-  (x) =>
-    task.value?.status !== TaskStatus.Done &&
-    task.value?.dependsOn.includes(x.id),
-);
+const blockingTasks = computed(() => taskStore.getBlockingTasks(task.value!));
 
 function openDependencyDialog() {
   state.addDependencyDialogIsShown = true;
@@ -50,12 +46,12 @@ function deleteTask() {
       <h1>{{ `#${task.id} - ${task.name}` }}</h1>
     </TmCardSection>
 
-    <TmCardSection
-      ><div v-if="!requiredTasks.length">✔ Can be started</div>
+    <TmCardSection>
+      <div v-if="!blockingTasks.length">✔ Can be started</div>
       <div v-else>
         ❌ Blocked by: <br />
-        <div v-for="task in requiredTasks" :key="task.id">
-          Task # {{ task.id }}
+        <div v-for="task in blockingTasks" :key="task.id">
+          {{ `${task.name} (#${task.id})` }}
         </div>
       </div>
 
@@ -63,7 +59,8 @@ function deleteTask() {
       <DependencyEditorDialog
         v-model="state.addDependencyDialogIsShown"
         :task="task"
-    /></TmCardSection>
+      />
+    </TmCardSection>
 
     <TmCardSection>
       <div>
@@ -74,8 +71,8 @@ function deleteTask() {
 
     <TmCardSection>
       <StandardButton icon="delete" label="Delete" @click="deleteTask" />
-      <StandardButton icon="save" label="Save" @click="updateTask"
-    /></TmCardSection>
+      <StandardButton icon="save" label="Save" @click="updateTask" />
+    </TmCardSection>
   </TmCard>
 </template>
 

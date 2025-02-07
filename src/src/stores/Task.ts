@@ -60,5 +60,11 @@ export const useTaskStore = defineStore("Tasks", () => {
     tasks.delete(task.id);
   }
 
-  return { addCopy, get, allTasks, update, remove };
+  function getBlockingTasks(task: Task) {
+    return allTasks.value.filter(
+      (x) => task.dependsOn.includes(x.id) && x.status !== TaskStatus.Done,
+    );
+  }
+
+  return { addCopy, get, allTasks, update, remove, getBlockingTasks };
 });
