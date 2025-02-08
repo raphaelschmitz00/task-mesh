@@ -16,8 +16,6 @@ const props = defineProps<{
 }>();
 
 class State {
-  addDependencyDialogIsShown = false;
-  task?: Task;
   availableTasks: Task[] = [];
   chosenTasks: Task[] = [];
 }
