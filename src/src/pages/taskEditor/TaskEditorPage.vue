@@ -49,7 +49,8 @@ function deleteTask() {
     </TmCardSection>
 
     <TmCardSection>
-      <span>No Deadline</span>
+      <span v-if="!task.deadline">No Deadline</span>
+      <span v-else>{{ task.deadline }}</span>
       <StandardButton
         icon="add"
         label="Edit"

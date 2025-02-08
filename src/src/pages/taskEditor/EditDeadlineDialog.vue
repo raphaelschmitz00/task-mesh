@@ -14,9 +14,7 @@ const props = defineProps<{
 }>();
 
 class State {
-  availableTasks: Task[] = [];
-  chosenTasks: Task[] = [];
-  chosenDateTIme: string = "";
+  chosenDateTime: string = "";
 }
 
 const state = reactive(new State());
@@ -24,15 +22,22 @@ const state = reactive(new State());
 const taskStore = useTaskStore();
 
 function fetchTask() {
-  state.availableTasks = taskStore.allTasks.filter((x) => x != props.task);
-  state.chosenTasks = state.availableTasks.filter((x) =>
-    props.task.dependsOn.includes(x.id),
-  );
+  if (props.task.deadline) {
+    state.chosenDateTime = JSON.stringify(props.task.deadline);
+  }
 }
 
-function exitSavingChanges() {}
+function exitSavingChanges() {
+  const date = state.chosenDateTime
+    ? new Date(state.chosenDateTime)
+    : undefined;
+  taskStore.update({ ...props.task, deadline: date });
+  model.value = false;
+}
 
-function exitDiscardingChanges() {}
+function exitDiscardingChanges() {
+  model.value = false;
+}
 
 watch(() => props.task, fetchTask);
 
@@ -46,11 +51,11 @@ fetchTask();
         <h2>Edit Deadline</h2>
       </TmCardSection>
 
-      <TmCardSection> Current value: {{ state.chosenDateTIme }} </TmCardSection>
+      <TmCardSection> Current value: {{ state.chosenDateTime }} </TmCardSection>
 
       <TmCardSection>
-        <q-date v-model="state.chosenDateTIme" mask="YYYY-MM-DD HH:mm" />
-        <q-time v-model="state.chosenDateTIme" mask="YYYY-MM-DD HH:mm" />
+        <q-date v-model="state.chosenDateTime" mask="YYYY-MM-DD HH:mm" />
+        <q-time v-model="state.chosenDateTime" mask="YYYY-MM-DD HH:mm" />
       </TmCardSection>
 
       <TmCardActionSection>

@@ -24,6 +24,7 @@ export class Task {
   id: number = -1;
   name: string = "";
   status: TaskStatus = TaskStatus.ToDo;
+  deadline?: Date;
   dependsOn: number[] = [];
 }
 
