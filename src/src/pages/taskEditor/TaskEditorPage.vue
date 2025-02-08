@@ -8,12 +8,14 @@ import StandardButton from "@/components/buttons/TmButton.vue";
 import DependencyEditorDialog from "./DependencyEditorDialog.vue";
 import TmCard from "@/components/cards/TmCard.vue";
 import TmCardSection from "@/components/cards/TmCardSection.vue";
+import EditDeadlineDialog from "./EditDeadlineDialog.vue";
 
 const props = defineProps<{
   idString: string;
 }>();
 
 class State {
+  editDeadlineDialogIsShown = false;
   addDependencyDialogIsShown = false;
 }
 
@@ -44,6 +46,19 @@ function deleteTask() {
   <TmCard v-if="task">
     <TmCardSection>
       <h1>{{ `#${task.id} - ${task.name}` }}</h1>
+    </TmCardSection>
+
+    <TmCardSection>
+      <span>No Deadline</span>
+      <StandardButton
+        icon="add"
+        label="Edit"
+        @click="state.editDeadlineDialogIsShown = true"
+      />
+      <EditDeadlineDialog
+        v-model="state.editDeadlineDialogIsShown"
+        :task="task"
+      />
     </TmCardSection>
 
     <TmCardSection>
