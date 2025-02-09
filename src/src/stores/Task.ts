@@ -1,4 +1,4 @@
-import { computed, reactive } from "vue";
+import { reactive } from "vue";
 import { defineStore } from "pinia";
 
 export enum TaskStatus {
@@ -31,8 +31,6 @@ const tasks = reactive(new Map<number, Task>());
 export const useTaskStore = defineStore("Tasks", () => {
   let keyCounter = 0;
 
-  const allTasks = computed(() => Array.from(tasks.values()));
-
   function addCopy(task: Task) {
     const id = keyCounter++;
     const newTask: Task = {
@@ -50,7 +48,7 @@ export const useTaskStore = defineStore("Tasks", () => {
     return tasks.get(id);
   }
 
-  function query(predicate: (task: Task) => boolean) {
+  function query(predicate: (task: Task) => boolean = () => true) {
     return Array.from(tasks.values()).filter(predicate);
   }
 
@@ -63,5 +61,5 @@ export const useTaskStore = defineStore("Tasks", () => {
     tasks.delete(task.id);
   }
 
-  return { addCopy, get, query, allTasks, update, remove };
+  return { addCopy, get, query, update, remove };
 });
