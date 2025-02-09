@@ -31,7 +31,7 @@ const tasks = reactive(new Map<number, Task>());
 export const useTaskStore = defineStore("Tasks", () => {
   let keyCounter = 0;
 
-  const allTasks = computed(() => Array.from(tasks, ([, value]) => value));
+  const allTasks = computed(() => Array.from(tasks.values()));
 
   function addCopy(task: Task) {
     const id = keyCounter++;
@@ -50,6 +50,10 @@ export const useTaskStore = defineStore("Tasks", () => {
     return tasks.get(id);
   }
 
+  function query(predicate: (task: Task) => boolean) {
+    return Array.from(tasks.values()).filter(predicate);
+  }
+
   function update(task: Task) {
     const storedTask = tasks.get(task.id);
     tasks.set(task.id, { ...storedTask, ...task });
@@ -59,5 +63,5 @@ export const useTaskStore = defineStore("Tasks", () => {
     tasks.delete(task.id);
   }
 
-  return { addCopy, get, allTasks, update, remove };
+  return { addCopy, get, query, allTasks, update, remove };
 });

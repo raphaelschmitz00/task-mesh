@@ -17,8 +17,8 @@ const props = defineProps<{
 }>();
 
 class State {
-  availableTasks: Task[] = [];
-  requirements: Requirement[] = [];
+  addedTasks: Task[] = [];
+  removedTasks: Task[] = [];
 }
 
 const state = reactive(new State());
@@ -26,45 +26,68 @@ const state = reactive(new State());
 const taskStore = useTaskStore();
 const requirementStore = useRequirementStore();
 
-const chosenTasks = computed(() =>
+const currentRequiredTasks = computed(() =>
   requirementStore.getRequiredTasks(props.task),
 );
 
-const unchosenTasks = computed(() =>
-  state.availableTasks.filter((x) => !chosenTasks.value.includes(x)),
+const chosenTasks = computed(() =>
+  [...currentRequiredTasks.value, ...state.addedTasks].filter((x) =>
+    state.removedTasks.includes(x),
+  ),
 );
 
-function fetchTask() {
-  state.availableTasks = taskStore.allTasks.filter((x) => x != props.task);
-  state.requirements = requirementStore.query(
-    (x) => x.dependentTaskId === props.task.id,
-  );
-}
+const unchosenTasks = computed(() =>
+  taskStore.query((x) => !chosenTasks.value.includes(x)),
+);
 
 function addDependency(task: Task) {
-  state.requirements.push(new Requirement(task.id, props.task.id));
+  const indexInRemovedTasks = state.removedTasks.indexOf(task);
+  if (indexInRemovedTasks === -1) state.addedTasks.push(task);
+  else state.removedTasks.splice(indexInRemovedTasks, 1);
 }
+
 function removeDependency(task: Task) {
-  const index = state.requirements.findIndex(
-    (x) => x.requiredTaskId === task.id,
-  );
-  state.requirements.splice(index, 1);
+  const indexInAddedTasks = state.addedTasks.indexOf(task);
+  if (indexInAddedTasks === -1) state.removedTasks.push(task);
+  else state.addedTasks.splice(indexInAddedTasks, 1);
+}
+
+function reset() {
+  state.addedTasks.length = 0;
+  state.removedTasks.length = 0;
 }
 
 function exitSavingChanges() {
-  for (const requirement of state.requirements) {
-    requirementStore.save(requirement);
+  for (const task of state.addedTasks) {
+    requirementStore.save(new Requirement(task.id, props.task.id));
   }
+
+  for (const task of state.removedTasks) {
+    const requirement = requirementStore.query(
+      (x) =>
+        x.requiredTaskId === task.id && x.dependentTaskId === props.task.id,
+    )[0];
+
+    if (!requirement) {
+      throw new Error(`No Requirement ${props.task.id} => ${task.id}`);
+    }
+
+    requirementStore.remove(requirement);
+  }
+
+  reset();
   model.value = false;
 }
 
 function exitDiscardingChanges() {
+  reset();
   model.value = false;
 }
 
-watch(() => props.task, fetchTask);
-
-fetchTask();
+watch(
+  () => props.task,
+  () => reset(),
+);
 </script>
 
 <template>
