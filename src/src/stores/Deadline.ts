@@ -20,9 +20,7 @@ const deadlines = reactive(new Map<number, Deadline>());
 export const useDeadlineStore = defineStore("Deadlines", () => {
   let keyCounter = 0;
 
-  const allDeadlines = computed(() =>
-    Array.from(deadlines, ([, value]) => value),
-  );
+  const allDeadlines = computed(() => Array.from(deadlines.values()));
 
   function save(deadline: Deadline) {
     if (deadline.id === Deadline.NotSavedId) {
