@@ -31,8 +31,8 @@ const currentRequiredTasks = computed(() =>
 );
 
 const chosenTasks = computed(() =>
-  [...currentRequiredTasks.value, ...state.addedTasks].filter((x) =>
-    state.removedTasks.includes(x),
+  [...currentRequiredTasks.value, ...state.addedTasks].filter(
+    (x) => !state.removedTasks.includes(x),
   ),
 );
 
