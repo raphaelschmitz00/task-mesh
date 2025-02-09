@@ -1,4 +1,4 @@
-import { computed, reactive } from "vue";
+import { reactive } from "vue";
 import { defineStore } from "pinia";
 import { TaskStatus, useTaskStore, type Task } from "./Task";
 
@@ -19,8 +19,6 @@ const requirements = reactive(new Map<number, Requirement>());
 
 export const useRequirementStore = defineStore("Requirements", () => {
   let keyCounter = 0;
-
-  const all = computed(() => Array.from(requirements.values()));
 
   function save(requirement: Requirement) {
     requirement.id ||= keyCounter++;
@@ -50,5 +48,5 @@ export const useRequirementStore = defineStore("Requirements", () => {
     requirements.delete(requirement.id);
   }
 
-  return { all, save, get, getRequiredTasks, getBlockingTasks, query, remove };
+  return { save, get, getRequiredTasks, getBlockingTasks, query, remove };
 });
