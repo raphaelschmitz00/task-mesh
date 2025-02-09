@@ -3,9 +3,7 @@ import { defineStore } from "pinia";
 import type { Task } from "./Task";
 
 export class Deadline {
-  static readonly NotSavedId = -1;
-
-  id: number = Deadline.NotSavedId;
+  id: number = 0;
   readonly taskId: number;
   date: Date;
 
@@ -18,13 +16,10 @@ export class Deadline {
 const deadlines = reactive(new Map<number, Deadline>());
 
 export const useDeadlineStore = defineStore("Deadlines", () => {
-  let keyCounter = 0;
+  let keyCounter = 1;
 
   function save(deadline: Deadline) {
-    if (deadline.id === Deadline.NotSavedId) {
-      deadline.id = keyCounter++;
-    }
-
+    deadline.id ||= keyCounter++;
     deadlines.set(deadline.id, deadline);
   }
 

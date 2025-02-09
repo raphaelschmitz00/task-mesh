@@ -3,9 +3,7 @@ import { defineStore } from "pinia";
 import { TaskStatus, useTaskStore, type Task } from "./Task";
 
 export class Requirement {
-  static readonly NotSavedId = 0;
-
-  id: number = Requirement.NotSavedId;
+  id: number = 0;
   readonly requiredTaskId: number;
   readonly dependentTaskId: number;
 
@@ -18,7 +16,7 @@ export class Requirement {
 const requirements = reactive(new Map<number, Requirement>());
 
 export const useRequirementStore = defineStore("Requirements", () => {
-  let keyCounter = 0;
+  let keyCounter = 1;
 
   function save(requirement: Requirement) {
     requirement.id ||= keyCounter++;

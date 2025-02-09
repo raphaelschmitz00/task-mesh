@@ -22,7 +22,7 @@ watch(props, (newProps) => {
 });
 
 function updateTask() {
-  taskStore.update(state.task);
+  taskStore.save(state.task);
   emit("updated");
   console.log(`updated ${JSON.stringify(state.task)}`);
 }

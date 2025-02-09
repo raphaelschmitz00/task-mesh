@@ -41,7 +41,7 @@ function openDependencyDialog() {
 }
 
 function updateTask() {
-  taskStore.update(task.value!);
+  taskStore.save(task.value!);
   router.back();
 }
 

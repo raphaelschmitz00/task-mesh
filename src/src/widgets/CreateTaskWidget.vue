@@ -7,7 +7,7 @@ import TmCard from "@/components/cards/TmCard.vue";
 import TmCardSection from "@/components/cards/TmCardSection.vue";
 
 class State {
-  task: Task = new Task();
+  task: Task = new Task("");
 }
 
 const state = reactive(new State());
@@ -15,7 +15,7 @@ const state = reactive(new State());
 const taskStore = useTaskStore();
 
 function createTask() {
-  taskStore.addCopy(state.task);
+  taskStore.save(state.task);
   state.task.status = TaskStatus.ToDo;
   state.task.name = "";
 }
