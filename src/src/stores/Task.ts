@@ -1,4 +1,4 @@
-import { computed, reactive } from "vue";
+import { reactive } from "vue";
 import { defineStore } from "pinia";
 
 export enum TaskStatus {
@@ -21,28 +21,24 @@ export function getTaskStatusName(status: TaskStatus) {
 }
 
 export class Task {
-  id: number = -1;
+  id: number = 0;
   name: string = "";
   status: TaskStatus = TaskStatus.ToDo;
+
+  constructor(name: string, status: TaskStatus = TaskStatus.ToDo) {
+    this.name = name;
+    this.status = status;
+  }
 }
 
 const tasks = reactive(new Map<number, Task>());
 
 export const useTaskStore = defineStore("Tasks", () => {
-  let keyCounter = 0;
+  let keyCounter = 1;
 
-  const allTasks = computed(() => Array.from(tasks, ([, value]) => value));
-
-  function addCopy(task: Task) {
-    const id = keyCounter++;
-    const newTask: Task = {
-      id: id,
-      status: task.status,
-      name: task.name,
-    };
-
-    tasks.set(id, newTask);
-    return newTask;
+  function save(task: Task) {
+    task.id ||= keyCounter++;
+    tasks.set(task.id, task);
   }
 
   function get(id: number) {
@@ -50,14 +46,13 @@ export const useTaskStore = defineStore("Tasks", () => {
     return tasks.get(id);
   }
 
-  function update(task: Task) {
-    const storedTask = tasks.get(task.id);
-    tasks.set(task.id, { ...storedTask, ...task });
+  function query(predicate: (task: Task) => boolean = () => true) {
+    return Array.from(tasks.values()).filter(predicate);
   }
 
   function remove(task: Task) {
     tasks.delete(task.id);
   }
 
-  return { addCopy, get, allTasks, update, remove };
+  return { save, get, query, remove };
 });

@@ -7,7 +7,7 @@ import { computed } from "vue";
 const taskStore = useTaskStore();
 
 const getWithStatus = (status: TaskStatus) =>
-  taskStore.allTasks.filter((x) => x.status === status);
+  taskStore.query((x) => x.status === status);
 
 const todos = computed(() => getWithStatus(TaskStatus.ToDo));
 const doings = computed(() => getWithStatus(TaskStatus.Doing));

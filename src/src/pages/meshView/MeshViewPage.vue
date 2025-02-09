@@ -6,7 +6,7 @@ import DateView from "@/components/DateView.vue";
 
 const taskStore = useTaskStore();
 
-const dateGroups = computed(() => sortTasksIntoDateGroups(taskStore.allTasks));
+const dateGroups = computed(() => sortTasksIntoDateGroups(taskStore.query()));
 </script>
 
 <template>

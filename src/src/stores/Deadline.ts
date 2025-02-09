@@ -1,11 +1,9 @@
-import { computed, reactive } from "vue";
+import { reactive } from "vue";
 import { defineStore } from "pinia";
 import type { Task } from "./Task";
 
 export class Deadline {
-  static readonly NotSavedId = -1;
-
-  id: number = Deadline.NotSavedId;
+  id: number = 0;
   readonly taskId: number;
   date: Date;
 
@@ -18,15 +16,10 @@ export class Deadline {
 const deadlines = reactive(new Map<number, Deadline>());
 
 export const useDeadlineStore = defineStore("Deadlines", () => {
-  let keyCounter = 0;
-
-  const allDeadlines = computed(() => Array.from(deadlines.values()));
+  let keyCounter = 1;
 
   function save(deadline: Deadline) {
-    if (deadline.id === Deadline.NotSavedId) {
-      deadline.id = keyCounter++;
-    }
-
+    deadline.id ||= keyCounter++;
     deadlines.set(deadline.id, deadline);
   }
 
@@ -42,5 +35,5 @@ export const useDeadlineStore = defineStore("Deadlines", () => {
     return Array.from(deadlines.values()).find((x) => x.taskId === task.id);
   }
 
-  return { allDeadlines, save, get, remove, getForTask };
+  return { save, get, remove, getForTask };
 });
