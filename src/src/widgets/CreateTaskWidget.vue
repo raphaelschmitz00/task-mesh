@@ -15,7 +15,7 @@ const state = reactive(new State());
 const taskStore = useTaskStore();
 
 function createTask() {
-  taskStore.save(state.task);
+  taskStore.save({ ...state.task });
   state.task.status = TaskStatus.ToDo;
   state.task.name = "";
 }
