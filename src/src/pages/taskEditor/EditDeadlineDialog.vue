@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { reactive, watch } from "vue";
-import { type Task, useTaskStore } from "@/stores/Task";
+import { type Task } from "@/stores/Task";
 import TmDialog from "@/components/dialogs/TmDialog.vue";
 import TmCard from "@/components/cards/TmCard.vue";
 import TmCardSection from "@/components/cards/TmCardSection.vue";
 import TmCardActionSection from "@/components/cards/TmCardActionSection.vue";
 import TmFlatButton from "@/components/buttons/TmFlatButton.vue";
+import { Deadline, useDeadlineStore } from "@/stores/Deadline";
 
 const model = defineModel<boolean>();
 
@@ -15,23 +16,23 @@ const props = defineProps<{
 
 class State {
   chosenDateTime: string = "";
+  deadline?: Deadline;
 }
-
 const state = reactive(new State());
 
-const taskStore = useTaskStore();
+const deadlineStore = useDeadlineStore();
 
-function fetchTask() {
-  if (props.task.deadline) {
-    state.chosenDateTime = JSON.stringify(props.task.deadline);
+function fetchDeadline() {
+  state.deadline = deadlineStore.getForTask(props.task);
+  if (state.deadline) {
+    state.chosenDateTime = JSON.stringify(state.deadline.date);
   }
 }
 
 function exitSavingChanges() {
-  const date = state.chosenDateTime
-    ? new Date(state.chosenDateTime)
-    : undefined;
-  taskStore.update({ ...props.task, deadline: date });
+  const date = new Date(state.chosenDateTime);
+  const deadline = state.deadline || new Deadline(props.task.id, date);
+  deadlineStore.save(deadline);
   model.value = false;
 }
 
@@ -39,9 +40,9 @@ function exitDiscardingChanges() {
   model.value = false;
 }
 
-watch(() => props.task, fetchTask);
+watch(() => props.task, fetchDeadline);
 
-fetchTask();
+fetchDeadline();
 </script>
 
 <template>

@@ -1,7 +1,9 @@
 import { useTaskStore, TaskStatus } from "@/stores/Task";
+import { Deadline, useDeadlineStore } from "./stores/Deadline";
 
 export default function addDevData() {
   const taskStore = useTaskStore();
+  const deadlineStore = useDeadlineStore();
 
   taskStore.addCopy({
     id: 7,
@@ -31,27 +33,27 @@ export default function addDevData() {
     dependsOn: [task9.id],
   });
 
-  taskStore.addCopy({
+  const task11 = taskStore.addCopy({
     id: 11,
     name: "Put in white laundry",
     status: TaskStatus.ToDo,
     dependsOn: [task10.id],
-    deadline: new Date("2030-02-05"),
   });
+  deadlineStore.save(new Deadline(task11.id, new Date("2030-02-05")));
 
   const task12 = taskStore.addCopy({
     id: 12,
     name: "Vacuum the floor",
     status: TaskStatus.ToDo,
     dependsOn: [],
-    deadline: new Date("2030-02-20"),
   });
+  deadlineStore.save(new Deadline(task12.id, new Date("2030-02-20")));
 
-  taskStore.addCopy({
+  const task13 = taskStore.addCopy({
     id: 13,
     name: "Wipe the floor",
     status: TaskStatus.ToDo,
     dependsOn: [task12.id],
-    deadline: new Date("2030-02-20"),
   });
+  deadlineStore.save(new Deadline(task13.id, new Date("2030-02-20")));
 }

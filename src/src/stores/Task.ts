@@ -24,7 +24,6 @@ export class Task {
   id: number = -1;
   name: string = "";
   status: TaskStatus = TaskStatus.ToDo;
-  deadline?: Date;
   dependsOn: number[] = [];
 }
 
@@ -42,7 +41,6 @@ export const useTaskStore = defineStore("Tasks", () => {
       status: task.status,
       name: task.name,
       dependsOn: [...task.dependsOn],
-      deadline: task.deadline,
     };
 
     tasks.set(id, newTask);

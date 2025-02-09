@@ -1,12 +1,13 @@
 import { computed, reactive } from "vue";
 import { defineStore } from "pinia";
+import type { Task } from "./Task";
 
 export class Deadline {
   static readonly NotSavedId = -1;
 
   id: number = Deadline.NotSavedId;
   readonly taskId: number;
-  readonly date: Date;
+  date: Date;
 
   constructor(taskId: number, date: Date) {
     this.taskId = taskId;
@@ -16,21 +17,18 @@ export class Deadline {
 
 const deadlines = reactive(new Map<number, Deadline>());
 
-export const useTaskStore = defineStore("Deadlines", () => {
+export const useDeadlineStore = defineStore("Deadlines", () => {
   let keyCounter = 0;
 
   const allDeadlines = computed(() =>
     Array.from(deadlines, ([, value]) => value),
   );
 
-  function saveNew(deadline: Deadline) {
+  function save(deadline: Deadline) {
     if (deadline.id === Deadline.NotSavedId) {
-      throw new Error(
-        `Trying to store Deadline already stored with ID ${deadline.id}`,
-      );
+      deadline.id = keyCounter++;
     }
 
-    deadline.id = keyCounter++;
     deadlines.set(deadline.id, deadline);
   }
 
@@ -42,5 +40,9 @@ export const useTaskStore = defineStore("Deadlines", () => {
     deadlines.delete(deadline.id);
   }
 
-  return { allDeadlines, saveNew, get, remove };
+  function getForTask(task: Task) {
+    return Array.from(deadlines.values()).find((x) => x.taskId === task.id);
+  }
+
+  return { allDeadlines, save, get, remove, getForTask };
 });
