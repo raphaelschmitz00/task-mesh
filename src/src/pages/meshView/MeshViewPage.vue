@@ -19,7 +19,7 @@ const dateGroups = computed(() => sortTasksIntoDateGroups(taskStore.allTasks));
         class="periodColumn"
       >
         deadline:
-        <DateView v-if="dateGroup.deadline" :date="dateGroup.deadline" />
+        <DateView v-if="dateGroup.deadline" :date="dateGroup.deadline.date" />
         <span v-else>None</span>
         <div>
           <div v-for="task in dateGroup.tasks" :key="task.id">

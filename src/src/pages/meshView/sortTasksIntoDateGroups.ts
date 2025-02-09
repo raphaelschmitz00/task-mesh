@@ -1,9 +1,14 @@
+import { type Deadline, useDeadlineStore } from "@/stores/Deadline";
+import { useRequirementStore } from "@/stores/Requirement";
 import { type Task } from "@/stores/Task";
 
+const deadlineStore = useDeadlineStore();
+const requirementStore = useRequirementStore();
+
 export class DateGroup {
-  deadline?: Date;
+  deadline?: Deadline;
   tasks: Task[];
-  constructor(deadline?: Date, tasks: Task[] = []) {
+  constructor(deadline?: Deadline, tasks: Task[] = []) {
     this.deadline = deadline;
     this.tasks = tasks;
   }
@@ -11,12 +16,14 @@ export class DateGroup {
 
 function groupByDeadline(data: Array<Task>) {
   return data.reduce(function (dateGroups, task) {
+    const deadline = deadlineStore.getForTask(task);
+
     let dateGroup = dateGroups.find(
-      (x) => x.deadline?.getTime() === task.deadline?.getTime(),
+      (x) => x.deadline?.date.getTime() === deadline?.date.getTime(),
     );
 
     if (!dateGroup) {
-      dateGroup = new DateGroup(task.deadline);
+      dateGroup = new DateGroup(deadline);
       dateGroups.push(dateGroup);
     }
 
@@ -33,7 +40,7 @@ function sortByDeadline(a: DateGroup, b: DateGroup) {
 }
 
 export default function sortTasksIntoDateGroups(tasks: Task[]) {
-  const tasksWithDeadline = tasks.filter((x) => x.deadline);
+  const tasksWithDeadline = tasks.filter((x) => deadlineStore.getForTask(x));
 
   const dateGroups = groupByDeadline(tasksWithDeadline);
   dateGroups.sort(sortByDeadline);
@@ -52,12 +59,10 @@ export default function sortTasksIntoDateGroups(tasks: Task[]) {
         group.tasks.push(task);
       }
 
-      for (const id of task.dependsOn) {
-        const requiredTask = remainingTasks.find((x) => x.id === id);
-        if (!requiredTask) continue;
-
-        tasksToProcess.push(requiredTask);
-      }
+      requirementStore
+        .getRequiredTasks(task)
+        .filter((x) => remainingTasks.includes(x))
+        .forEach((x) => tasksToProcess.push(x));
     }
   }
 

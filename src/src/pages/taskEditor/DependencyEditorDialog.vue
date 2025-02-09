@@ -8,6 +8,7 @@ import TmList from "@/components/lists/TmList.vue";
 import TmActionItem from "@/components/lists/TmActionItem.vue";
 import TmCardActionSection from "@/components/cards/TmCardActionSection.vue";
 import TmFlatButton from "@/components/buttons/TmFlatButton.vue";
+import { Requirement, useRequirementStore } from "@/stores/Requirement";
 
 const model = defineModel<boolean>();
 
@@ -17,35 +18,43 @@ const props = defineProps<{
 
 class State {
   availableTasks: Task[] = [];
-  chosenTasks: Task[] = [];
+  requirements: Requirement[] = [];
 }
 
 const state = reactive(new State());
 
 const taskStore = useTaskStore();
+const requirementStore = useRequirementStore();
+
+const chosenTasks = computed(() =>
+  requirementStore.getRequiredTasks(props.task),
+);
 
 const unchosenTasks = computed(() =>
-  state.availableTasks.filter((x) => !state.chosenTasks.includes(x)),
+  state.availableTasks.filter((x) => !chosenTasks.value.includes(x)),
 );
 
 function fetchTask() {
   state.availableTasks = taskStore.allTasks.filter((x) => x != props.task);
-  state.chosenTasks = state.availableTasks.filter((x) =>
-    props.task.dependsOn.includes(x.id),
+  state.requirements = requirementStore.query(
+    (x) => x.dependentTaskId === props.task.id,
   );
 }
 
 function addDependency(task: Task) {
-  state.chosenTasks.push(task);
+  state.requirements.push(new Requirement(task.id, props.task.id));
 }
 function removeDependency(task: Task) {
-  const index = state.chosenTasks.indexOf(task);
-  state.chosenTasks.splice(index, 1);
+  const index = state.requirements.findIndex(
+    (x) => x.requiredTaskId === task.id,
+  );
+  state.requirements.splice(index, 1);
 }
 
 function exitSavingChanges() {
-  const chosenIds = state.chosenTasks.map((x) => x.id);
-  taskStore.update({ ...props.task, dependsOn: chosenIds });
+  for (const requirement of state.requirements) {
+    requirementStore.save(requirement);
+  }
   model.value = false;
 }
 
@@ -69,7 +78,7 @@ fetchTask();
         <span>Required Tasks</span>
         <TmList hasBorder>
           <TmActionItem
-            v-for="requiredTask in state.chosenTasks"
+            v-for="requiredTask in chosenTasks"
             :key="requiredTask.id"
             :label="requiredTask.name"
             icon="remove_circle"

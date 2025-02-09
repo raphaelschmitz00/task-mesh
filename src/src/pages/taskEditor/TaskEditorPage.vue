@@ -9,6 +9,8 @@ import DependencyEditorDialog from "./DependencyEditorDialog.vue";
 import TmCard from "@/components/cards/TmCard.vue";
 import TmCardSection from "@/components/cards/TmCardSection.vue";
 import EditDeadlineDialog from "./EditDeadlineDialog.vue";
+import { useDeadlineStore } from "@/stores/Deadline";
+import { useRequirementStore } from "@/stores/Requirement";
 
 const props = defineProps<{
   idString: string;
@@ -22,10 +24,17 @@ class State {
 const state = reactive(new State());
 
 const taskStore = useTaskStore();
+const requirementStore = useRequirementStore();
+const deadlineStore = useDeadlineStore();
 const router = useRouter();
 
 const task = computed(() => taskStore.get(parseInt(props.idString)));
-const blockingTasks = computed(() => taskStore.getBlockingTasks(task.value!));
+const blockingTasks = computed(() =>
+  requirementStore.getBlockingTasks(task.value!),
+);
+const deadline = computed(() =>
+  task.value ? deadlineStore.getForTask(task.value) : undefined,
+);
 
 function openDependencyDialog() {
   state.addDependencyDialogIsShown = true;
@@ -49,8 +58,8 @@ function deleteTask() {
     </TmCardSection>
 
     <TmCardSection>
-      <span v-if="!task.deadline">No Deadline</span>
-      <span v-else>{{ task.deadline }}</span>
+      <span v-if="!deadline">No Deadline</span>
+      <span v-else>{{ deadline.date }}</span>
       <StandardButton
         icon="add"
         label="Edit"

@@ -24,8 +24,6 @@ export class Task {
   id: number = -1;
   name: string = "";
   status: TaskStatus = TaskStatus.ToDo;
-  deadline?: Date;
-  dependsOn: number[] = [];
 }
 
 const tasks = reactive(new Map<number, Task>());
@@ -41,8 +39,6 @@ export const useTaskStore = defineStore("Tasks", () => {
       id: id,
       status: task.status,
       name: task.name,
-      dependsOn: [...task.dependsOn],
-      deadline: task.deadline,
     };
 
     tasks.set(id, newTask);
@@ -50,6 +46,7 @@ export const useTaskStore = defineStore("Tasks", () => {
   }
 
   function get(id: number) {
+    if (!tasks.has(id)) throw new Error(`No task wth ID ${id}`);
     return tasks.get(id);
   }
 
@@ -62,11 +59,5 @@ export const useTaskStore = defineStore("Tasks", () => {
     tasks.delete(task.id);
   }
 
-  function getBlockingTasks(task: Task) {
-    return allTasks.value.filter(
-      (x) => task.dependsOn.includes(x.id) && x.status !== TaskStatus.Done,
-    );
-  }
-
-  return { addCopy, get, allTasks, update, remove, getBlockingTasks };
+  return { addCopy, get, allTasks, update, remove };
 });
