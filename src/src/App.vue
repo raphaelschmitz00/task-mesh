@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 import { RouterView, useRouter } from "vue-router";
+import { routes } from "./pages/router";
 import TmList from "./components/lists/TmList.vue";
 import TmListItem from "./components/lists/TmListItem.vue";
 
@@ -29,7 +30,7 @@ const basePath = import.meta.env.BASE_URL;
           color="white"
           round
           unelevated
-          @click="router.push('/')"
+          @click="router.push(routes.home())"
         />
         <q-toolbar-title>Task Mesh</q-toolbar-title>
       </q-toolbar>
@@ -45,7 +46,10 @@ const basePath = import.meta.env.BASE_URL;
         <nav>
           <TmList>
             <TmListItem>
-              <RouterLink to="/">Status Board</RouterLink>
+              <RouterLink :to="routes.home()">Status Board</RouterLink>
+            </TmListItem>
+            <TmListItem>
+              <RouterLink :to="routes.meshView()">Mesh View</RouterLink>
             </TmListItem>
           </TmList>
         </nav>

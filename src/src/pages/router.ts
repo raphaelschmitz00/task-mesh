@@ -1,17 +1,25 @@
 import { createRouter, createWebHistory } from "vue-router";
 import StatusBoardPage from "./status/StatusBoardPage.vue";
 
+export const routes = {
+  home: () => "/",
+  meshView: () => "/mesh/",
+  taskEditor: (id: number | string) => `/task/${id}`,
+};
+
 export default createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      name: "home",
-      path: "/",
+      path: routes.home(),
       component: StatusBoardPage,
     },
     {
-      name: "task-editor",
-      path: "/task/:idString",
+      path: routes.meshView(),
+      component: () => import("./meshView/MeshViewPage.vue"),
+    },
+    {
+      path: routes.taskEditor(":idString"),
       props: true,
       component: () => import("./taskEditor/TaskEditorPage.vue"),
     },

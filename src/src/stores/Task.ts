@@ -42,6 +42,7 @@ export const useTaskStore = defineStore("Tasks", () => {
       status: task.status,
       name: task.name,
       dependsOn: [...task.dependsOn],
+      deadline: task.deadline,
     };
 
     tasks.set(id, newTask);
