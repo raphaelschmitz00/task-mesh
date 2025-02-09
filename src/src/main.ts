@@ -9,6 +9,7 @@ import "quasar/dist/quasar.css";
 
 import App from "./App.vue";
 import router from "./pages/router";
+import addDevData from "./devData";
 
 const app = createApp(App);
 
@@ -27,3 +28,7 @@ app.use(Quasar, {
 app.use(router);
 
 app.mount("#app");
+
+if (import.meta.env.DEV) {
+  addDevData();
+}
