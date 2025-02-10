@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { computed, reactive } from "vue";
 import { type Task } from "@/stores/Task";
-import UpdateTaskWidget from "@/widgets/UpdateTaskWidget.vue";
-import TaskStatusView from "@/widgets/TaskStatusView.vue";
-import LinkButton from "@/components/buttons/TmLinkButton.vue";
+import { useRequirementStore } from "@/stores/Requirement";
 import TmCard from "@/components/cards/TmCard.vue";
 import TmCardSection from "@/components/cards/TmCardSection.vue";
-import { useRequirementStore } from "@/stores/Requirement";
+import UpdateTaskWidget from "@/widgets/UpdateTaskWidget.vue";
+import TaskStatusView from "@/widgets/TaskStatusView.vue";
+import EditTaskDialog from "@/widgets/editTaskDialog/EditTaskDialog.vue";
+import TmButton from "@/components/buttons/TmButton.vue";
 
 const props = defineProps<{
   task: Task;
@@ -14,6 +15,7 @@ const props = defineProps<{
 
 class State {
   isEditing = false;
+  showEditDialog = false;
 }
 
 const state = reactive(new State());
@@ -29,16 +31,18 @@ const blockingTasks = computed(() =>
     <TmCardSection>
       <div v-if="blockingTasks.length">❌ Is Blocked</div>
       <div>
-        <TaskStatusView :status="props.task.status" />
-        # {{ props.task.id }} -
+        <TaskStatusView :status="task.status" />
+        # {{ task.id }} -
         <UpdateTaskWidget
           v-if="state.isEditing"
-          :task="props.task"
+          :task="task"
           @updated="state.isEditing = false"
         />
-        <span v-else> {{ props.task.name }}</span>
+        <span v-else> {{ task.name }}</span>
       </div>
-      <LinkButton icon="edit" label="Edit" :path="`task/${props.task.id}`" />
+
+      <TmButton icon="edit" label="Edit" @click="state.showEditDialog = true" />
+      <EditTaskDialog v-model="state.showEditDialog" :task="task" />
     </TmCardSection>
   </TmCard>
 </template>
