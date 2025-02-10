@@ -1,41 +1,19 @@
 <script setup lang="ts">
-import { computed, reactive } from "vue";
 import { type Task, useTaskStore } from "@/stores/Task";
-import TaskStatusDropdown from "@/widgets/TaskStatusDropdown.vue";
-import TaskStatusView from "@/widgets/TaskStatusView.vue";
 import StandardButton from "@/components/buttons/TmButton.vue";
-import DependencyEditorDialog from "./DependencyEditorDialog.vue";
 import TmCard from "@/components/cards/TmCard.vue";
 import TmCardSection from "@/components/cards/TmCardSection.vue";
-import EditDeadlineDialog from "./EditDeadlineDialog.vue";
-import { useDeadlineStore } from "@/stores/Deadline";
-import { useRequirementStore } from "@/stores/Requirement";
+import DeadlineSection from "./DeadlineSection.vue";
+import RequirementSection from "./RequirementSection.vue";
+import StatusSection from "./StatusSection.vue";
 
 const props = defineProps<{
   task: Task;
 }>();
 
-class State {
-  editDeadlineDialogIsShown = false;
-  addDependencyDialogIsShown = false;
-}
-const state = reactive(new State());
-
 const emit = defineEmits<{
   doneEditing: [];
 }>();
-
-const requirementStore = useRequirementStore();
-const deadlineStore = useDeadlineStore();
-
-const blockingTasks = computed(() =>
-  requirementStore.getBlockingTasks(props.task),
-);
-const deadline = computed(() => deadlineStore.getForTask(props.task));
-
-function openDependencyDialog() {
-  state.addDependencyDialogIsShown = true;
-}
 
 const taskStore = useTaskStore();
 function updateTask() {
@@ -56,40 +34,15 @@ function deleteTask() {
     </TmCardSection>
 
     <TmCardSection>
-      <span v-if="!deadline">No Deadline</span>
-      <span v-else>{{ deadline.date }}</span>
-      <StandardButton
-        icon="add"
-        label="Edit"
-        @click="state.editDeadlineDialogIsShown = true"
-      />
-      <EditDeadlineDialog
-        v-model="state.editDeadlineDialogIsShown"
-        :task="task"
-      />
+      <DeadlineSection :task="task" />
     </TmCardSection>
 
     <TmCardSection>
-      <div v-if="!blockingTasks.length">✔ Can be started</div>
-      <div v-else>
-        ❌ Blocked by: <br />
-        <div v-for="task in blockingTasks" :key="task.id">
-          {{ `${task.name} (#${task.id})` }}
-        </div>
-      </div>
-
-      <StandardButton icon="add" label="Add" @click="openDependencyDialog" />
-      <DependencyEditorDialog
-        v-model="state.addDependencyDialogIsShown"
-        :task="task"
-      />
+      <RequirementSection :task="task" />
     </TmCardSection>
 
     <TmCardSection>
-      <div>
-        <TaskStatusView :status="task.status" class="statusRowItem" />
-        <TaskStatusDropdown :model-value="task.status" class="statusRowItem" />
-      </div>
+      <StatusSection :task="task" />
     </TmCardSection>
 
     <TmCardSection>
@@ -98,9 +51,3 @@ function deleteTask() {
     </TmCardSection>
   </TmCard>
 </template>
-
-<style lang="css" scoped>
-.statusRowItem {
-  display: inline-block;
-}
-</style>
