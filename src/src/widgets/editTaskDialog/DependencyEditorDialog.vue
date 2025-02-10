@@ -101,11 +101,11 @@ watch(
         <span>Required Tasks</span>
         <TmList hasBorder>
           <TmActionItem
-            v-for="requiredTask in chosenTasks"
-            :key="requiredTask.id"
-            :label="requiredTask.name"
+            v-for="chosenTask in chosenTasks"
+            :key="chosenTask.id"
+            :label="chosenTask.name"
             icon="remove_circle"
-            @click="removeDependency(requiredTask)"
+            @click="removeDependency(chosenTask)"
           />
         </TmList>
       </TmCardSection>
@@ -114,11 +114,11 @@ watch(
         <span>Available</span>
         <TmList hasBorder>
           <TmActionItem
-            v-for="requiredTask in unchosenTasks"
-            :key="requiredTask.id"
-            :label="requiredTask.name"
+            v-for="unchosenTask in unchosenTasks"
+            :key="unchosenTask.id"
+            :label="unchosenTask.name"
             icon="add_circle"
-            @click="addDependency(requiredTask)"
+            @click="addDependency(unchosenTask)"
           />
         </TmList>
       </TmCardSection>
