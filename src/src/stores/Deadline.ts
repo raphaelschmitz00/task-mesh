@@ -1,6 +1,7 @@
 import { reactive } from "vue";
 import { defineStore } from "pinia";
 import type { Task } from "./Task";
+import initializeDb from "./db";
 
 export class Deadline {
   id: number = 0;
@@ -13,13 +14,23 @@ export class Deadline {
   }
 }
 
+const db = initializeDb();
+
 const deadlines = reactive(new Map<number, Deadline>());
 
 export const useDeadlineStore = defineStore("Deadlines", () => {
-  let keyCounter = 1;
+  let keyCounter = 7;
 
   function save(deadline: Deadline) {
     deadline.id ||= keyCounter++;
+
+    const transaction = db.transaction("deadlines", "readwrite");
+    const store = transaction.objectStore("deadlines");
+    const f = store.add(deadline);
+    console.log("autooo", f);
+    f.onsuccess = () => console.log("auto2", f.result);
+    f.onerror = () => console.log("autooo 3", f.result);
+
     deadlines.set(deadline.id, deadline);
   }
 

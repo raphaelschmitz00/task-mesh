@@ -31,41 +31,6 @@ export class Task {
   }
 }
 
-const request = indexedDB.open("task_mesh_db");
-request.onupgradeneeded = () => {
-  const db = request.result;
-  const store = db.createObjectStore("mystore", { keyPath: "id" });
-  store.createIndex("branch_db", ["branch"], { unique: false });
-};
-request.onsuccess = function () {
-  console.log("database opened successfully");
-  const db = request.result;
-  const transaction = db.transaction("mystore", "readwrite");
-  const store = transaction.objectStore("mystore");
-  const branchIndex = store.index("branch_db");
-  store.put({ id: 1, name: "jason", branch: "IT" });
-  store.put({ id: 2, name: "praneeth", branch: "CSE" });
-  store.put({ id: 3, name: "palli", branch: "EEE" });
-  store.put({ id: 4, name: "abdul", branch: "IT" });
-  store.put({ id: 4, name: "deevana", branch: "CSE" });
-  const req = branchIndex.getAll(["CSE"]);
-  req.onsuccess = function () {
-    console.log("onsuccess");
-    if (req.result !== undefined) {
-      console.log("bots", req.result);
-    } else {
-      console.log("There are no such bots");
-    }
-  };
-  req.onerror = (e) => {
-    console.log("onerror", e);
-  };
-  transaction.oncomplete = function () {
-    console.log("oncomplete");
-    db.close();
-  };
-};
-
 const tasks = reactive(new Map<number, Task>());
 
 export const useTaskStore = defineStore("Tasks", () => {

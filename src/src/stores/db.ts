@@ -1,76 +1,46 @@
-function initializeDb() {
-  return new Promise<IDBDatabase>((resolve, reject) => {
-    const request = indexedDB.open("task_mesh_db");
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = (e) => reject(`Opening DB failed: ${e}`);
-  });
+const dbName = "task_mesh_db";
+
+function setUpDb(
+  resolve: (database: IDBDatabase) => void,
+  reject: (reason: unknown) => void,
+) {
+  const request = indexedDB.open(dbName);
+
+  request.onupgradeneeded = () => {
+    const db = request.result;
+
+    const taskStore = db.createObjectStore("tasks", { keyPath: "id" });
+    taskStore.createIndex("ix_name", "name", { unique: false });
+    taskStore.createIndex("ix_status", "status", { unique: false });
+
+    const deadlineStore = db.createObjectStore("deadlines", {
+      keyPath: "id",
+      autoIncrement: true,
+    });
+    deadlineStore.createIndex("ix_taskId", "taskId", { unique: true });
+    deadlineStore.createIndex("ix_date", "date", { unique: false });
+
+    const requirementStore = db.createObjectStore("requirements", {
+      keyPath: "id",
+    });
+    requirementStore.createIndex("ix_requiredTaskId", "requiredTaskId", {
+      unique: false,
+    });
+    requirementStore.createIndex("ix_dependentTaskId", "dependentTaskId", {
+      unique: false,
+    });
+  };
+
+  request.onsuccess = () => resolve(request.result);
+  request.onerror = (e) => reject(`Opening DB failed: ${JSON.stringify(e)}`);
 }
 
-const f = await initializeDb();
-
-class TaskMeshDb {
-  f = {
-    taskIds: IDBIndex,
-  };
+function setUpDbAsync() {
+  return new Promise<IDBDatabase>(setUpDb);
 }
 
-function createDb(db: IDBDatabase) {
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction("deadlines", "readwrite");
-    const store = transaction.objectStore("deadlines");
+const db = await setUpDbAsync();
 
-    const branchIndex = store.index("branch_db");
-
-    transaction.oncomplete = function () {
-      console.log("oncomplete");
-      resolve({
-        deadlines: {
-          taskIds: number,
-        },
-      });
-      db.close();
-    };
-  });
-}
-
-// ===
-const request = indexedDB.open("task_mesh_db");
-request.onupgradeneeded = () => {
-  const db = request.result;
-  const store = db.createObjectStore("mystore", { keyPath: "id" });
-  store.createIndex("branch_db", ["branch"], { unique: false });
-};
-request.onsuccess = function () {
-  console.log("database opened successfully");
-  const db = request.result;
-  const transaction = db.transaction("mystore", "readwrite");
-  const store = transaction.objectStore("mystore");
-  const branchIndex = store.index("branch_db");
-  store.put({ id: 1, name: "jason", branch: "IT" });
-  store.put({ id: 2, name: "praneeth", branch: "CSE" });
-  store.put({ id: 3, name: "palli", branch: "EEE" });
-  store.put({ id: 4, name: "abdul", branch: "IT" });
-  store.put({ id: 4, name: "deevana", branch: "CSE" });
-  const req = branchIndex.getAll(["CSE"]);
-  req.onsuccess = function () {
-    console.log("onsuccess");
-    if (req.result !== undefined) {
-      console.log("bots", req.result);
-    } else {
-      console.log("There are no such bots");
-    }
-  };
-  req.onerror = (e) => {
-    console.log("onerror", e);
-  };
-  transaction.oncomplete = function () {
-    console.log("oncomplete");
-    db.close();
-  };
-};
-
-function apiOn(event) {
-  return new Promise((resolve) => {
-    api.on(event, (response) => resolve(response));
-  });
+export default function initializeDb() {
+  return db;
 }
