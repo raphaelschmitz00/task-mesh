@@ -1,10 +1,9 @@
 import { useTaskStore, Task } from "@/stores/Task";
-import { Deadline, useDeadlineStore } from "./stores/Deadline";
+import { Deadline, deadlineStore } from "./stores/Deadline";
 import { Requirement, useRequirementStore } from "./stores/Requirement";
 
-export default function addDevData() {
+export default async function addDevData() {
   const taskStore = useTaskStore();
-  const deadlineStore = useDeadlineStore();
   const requirementStore = useRequirementStore();
 
   const task1 = new Task("Do the Dishes");
@@ -24,7 +23,7 @@ export default function addDevData() {
   const task11 = new Task("Put in white laundry");
   taskStore.save(task11);
   requirementStore.save(new Requirement(task10.id, task11.id));
-  deadlineStore.save(new Deadline(task11.id, new Date("2030-02-05")));
+  await deadlineStore.save(new Deadline(task11.id, new Date("2030-02-05")));
 
   const task12 = new Task("Vacuum the floor");
   taskStore.save(task12);

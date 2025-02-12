@@ -1,7 +1,7 @@
 import { reactive } from "vue";
 import { defineStore } from "pinia";
 import type { Task } from "./Task";
-import initializeDb from "./db";
+import { setUpDbAsync, doInDb } from "./db";
 
 export class Deadline {
   id: number = 0;
@@ -14,7 +14,27 @@ export class Deadline {
   }
 }
 
-const db = initializeDb();
+function removeProperty<T, K extends keyof T>(obj: T, key: K): Omit<T, K> {
+  const { [key]: _, ...rest } = obj;
+  void _;
+  return rest;
+}
+
+export class DeadlineStore {
+  async save(deadline: Deadline) {
+    await doInDb(async (db) => {
+      const transaction = db.transaction("deadlines", "readwrite");
+      const store = transaction.objectStore("deadlines");
+
+      const storableDeadline = removeProperty(deadline, "id");
+      const request = store.add(storableDeadline);
+      request.onsuccess = () => (deadline.id = request.result as number);
+      request.onerror = console.log;
+    });
+  }
+}
+
+export const deadlineStore = new DeadlineStore();
 
 const deadlines = reactive(new Map<number, Deadline>());
 
@@ -23,13 +43,6 @@ export const useDeadlineStore = defineStore("Deadlines", () => {
 
   function save(deadline: Deadline) {
     deadline.id ||= keyCounter++;
-
-    const transaction = db.transaction("deadlines", "readwrite");
-    const store = transaction.objectStore("deadlines");
-    const f = store.add(deadline);
-    console.log("autooo", f);
-    f.onsuccess = () => console.log("auto2", f.result);
-    f.onerror = () => console.log("autooo 3", f.result);
 
     deadlines.set(deadline.id, deadline);
   }
