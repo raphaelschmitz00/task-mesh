@@ -6,7 +6,7 @@ import TmCard from "@/components/cards/TmCard.vue";
 import TmCardSection from "@/components/cards/TmCardSection.vue";
 import TmCardActionSection from "@/components/cards/TmCardActionSection.vue";
 import TmFlatButton from "@/components/buttons/TmFlatButton.vue";
-import { Deadline, useDeadlineStore } from "@/stores/Deadline";
+import { Deadline, deadlineStore } from "@/stores/Deadline";
 
 const model = defineModel<boolean>();
 
@@ -20,19 +20,17 @@ class State {
 }
 const state = reactive(new State());
 
-const deadlineStore = useDeadlineStore();
-
-function fetchDeadline() {
-  state.deadline = deadlineStore.getForTask(props.task);
+async function fetchDeadline() {
+  state.deadline = await deadlineStore.getForTask(props.task);
   if (state.deadline) {
     state.chosenDateTime = JSON.stringify(state.deadline.date);
   }
 }
 
-function exitSavingChanges() {
+async function exitSavingChanges() {
   const date = new Date(state.chosenDateTime);
   const deadline = state.deadline || new Deadline(props.task.id, date);
-  deadlineStore.save(deadline);
+  await deadlineStore.save(deadline);
   model.value = false;
 }
 
