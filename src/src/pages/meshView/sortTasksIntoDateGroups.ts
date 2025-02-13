@@ -1,8 +1,7 @@
-import { type Deadline, useDeadlineStore } from "@/stores/Deadline";
+import { type Deadline, deadlineStore } from "@/stores/Deadline";
 import { useRequirementStore } from "@/stores/Requirement";
 import { type Task } from "@/stores/Task";
 
-const deadlineStore = useDeadlineStore();
 const requirementStore = useRequirementStore();
 
 export class DateGroup {
@@ -14,9 +13,17 @@ export class DateGroup {
   }
 }
 
-function groupByDeadline(data: Array<Task>) {
-  return data.reduce(function (dateGroups, task) {
-    const deadline = deadlineStore.getForTask(task);
+type GroupData = { task: Task; deadline?: Deadline };
+
+async function groupByDeadline(data: Array<Task>) {
+  const groupDatas = new Array<GroupData>();
+  for await (const task of data) {
+    const deadline = await deadlineStore.getForTask(task);
+    groupDatas.push({ task, deadline });
+  }
+
+  return groupDatas.reduce(function (dateGroups, groupData) {
+    const deadline = groupData.deadline;
 
     let dateGroup = dateGroups.find(
       (x) => x.deadline?.date.getTime() === deadline?.date.getTime(),
@@ -27,7 +34,7 @@ function groupByDeadline(data: Array<Task>) {
       dateGroups.push(dateGroup);
     }
 
-    dateGroup.tasks.push(task);
+    dateGroup.tasks.push(groupData.task);
 
     return dateGroups;
   }, new Array<DateGroup>());
@@ -39,10 +46,10 @@ function sortByDeadline(a: DateGroup, b: DateGroup) {
   return 0;
 }
 
-export default function sortTasksIntoDateGroups(tasks: Task[]) {
+export default async function sortTasksIntoDateGroups(tasks: Task[]) {
   const tasksWithDeadline = tasks.filter((x) => deadlineStore.getForTask(x));
 
-  const dateGroups = groupByDeadline(tasksWithDeadline);
+  const dateGroups = await groupByDeadline(tasksWithDeadline);
   dateGroups.sort(sortByDeadline);
 
   const remainingTasks = [...tasks];

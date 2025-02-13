@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, reactive } from "vue";
+import { reactive, watch } from "vue";
 import { type Task } from "@/stores/Task";
 import StandardButton from "@/components/buttons/TmButton.vue";
 import EditDeadlineDialog from "./EditDeadlineDialog.vue";
-import { useDeadlineStore } from "@/stores/Deadline";
+import { Deadline, deadlineStore } from "@/stores/Deadline";
 
 const props = defineProps<{
   task: Task;
@@ -11,17 +11,20 @@ const props = defineProps<{
 
 class State {
   editDialogIsShown = false;
+  deadline?: Deadline;
 }
 const state = reactive(new State());
 
-const deadlineStore = useDeadlineStore();
-const deadline = computed(() => deadlineStore.getForTask(props.task));
+watch(
+  () => props.task,
+  async () => (state.deadline = await deadlineStore.getForTask(props.task)),
+);
 </script>
 
 <template>
   <span>
-    <span v-if="!deadline">No Deadline</span>
-    <span v-else>{{ deadline.date }}</span>
+    <span v-if="!state.deadline">No Deadline</span>
+    <span v-else>{{ state.deadline.date }}</span>
     <StandardButton
       icon="add"
       label="Edit"

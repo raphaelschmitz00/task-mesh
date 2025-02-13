@@ -1,12 +1,20 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { reactive, watch } from "vue";
 import { useTaskStore } from "@/stores/Task";
-import sortTasksIntoDateGroups from "./sortTasksIntoDateGroups";
+import sortTasksIntoDateGroups, { DateGroup } from "./sortTasksIntoDateGroups";
 import DateView from "@/components/DateView.vue";
 
 const taskStore = useTaskStore();
 
-const dateGroups = computed(() => sortTasksIntoDateGroups(taskStore.query()));
+class State {
+  dateGroups: DateGroup[] = [];
+}
+const state = reactive(new State());
+
+watch(
+  () => taskStore.query(),
+  async (x) => (state.dateGroups = await sortTasksIntoDateGroups(x)),
+);
 </script>
 
 <template>
@@ -14,7 +22,7 @@ const dateGroups = computed(() => sortTasksIntoDateGroups(taskStore.query()));
     MESH
     <div>
       <div
-        v-for="dateGroup in dateGroups"
+        v-for="dateGroup in state.dateGroups"
         :key="dateGroup.deadline?.toString()"
         class="periodColumn"
       >
