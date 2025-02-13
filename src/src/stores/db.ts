@@ -111,7 +111,7 @@ export async function get<T>(storeName: StoreName, id: number) {
   return await doInObjectStore(
     storeName,
     async (store) =>
-      new Promise((resolve, reject) => {
+      new Promise<T>((resolve, reject) => {
         const request = store.get(id);
         request.onerror = reject;
         request.onsuccess = () => resolve(request.result as T);

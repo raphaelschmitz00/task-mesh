@@ -1,5 +1,6 @@
 import { reactive } from "vue";
 import { defineStore } from "pinia";
+import { doInObjectStore, get, StoreName, remove, save } from "./db";
 import { TaskStatus, useTaskStore, type Task } from "./Task";
 
 export class Requirement {
@@ -12,6 +13,15 @@ export class Requirement {
     this.dependentTaskId = dependentTaskId;
   }
 }
+
+export class RequirementStore {
+  save = (deadline: Requirement) => save(StoreName.requirements, deadline);
+
+  get = (id: number) => get<Requirement>(StoreName.requirements, id);
+
+  remove = (deadline: Requirement) => remove(StoreName.requirements, deadline);
+}
+export const requirementStore = new RequirementStore();
 
 const requirements = reactive(new Map<number, Requirement>());
 

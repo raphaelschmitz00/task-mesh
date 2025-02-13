@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactive, watch } from "vue";
-import { useTaskStore, Task } from "@/stores/Task";
+import { taskStore, Task } from "@/stores/Task";
 
 const props = defineProps<{
   task: Task;
@@ -15,14 +15,13 @@ class State {
 }
 
 const state = reactive(new State());
-const taskStore = useTaskStore();
 
 watch(props, (newProps) => {
   state.task = newProps.task;
 });
 
-function updateTask() {
-  taskStore.save(state.task);
+async function updateTask() {
+  await taskStore.save(state.task);
   emit("updated");
   console.log(`updated ${JSON.stringify(state.task)}`);
 }

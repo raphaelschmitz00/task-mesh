@@ -1,3 +1,4 @@
+import { doInObjectStore, get, StoreName, remove, save } from "./db";
 import { reactive } from "vue";
 import { defineStore } from "pinia";
 
@@ -30,6 +31,15 @@ export class Task {
     this.status = status;
   }
 }
+
+export class TaskStore {
+  save = (deadline: Task) => save(StoreName.tasks, deadline);
+
+  get = (id: number) => get<Task>(StoreName.tasks, id);
+
+  remove = (deadline: Task) => remove(StoreName.tasks, deadline);
+}
+export const taskStore = new TaskStore();
 
 const tasks = reactive(new Map<number, Task>());
 

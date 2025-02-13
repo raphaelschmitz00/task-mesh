@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type Task, useTaskStore } from "@/stores/Task";
+import { type Task, taskStore } from "@/stores/Task";
 import StandardButton from "@/components/buttons/TmButton.vue";
 import TmCard from "@/components/cards/TmCard.vue";
 import TmCardSection from "@/components/cards/TmCardSection.vue";
@@ -15,14 +15,13 @@ const emit = defineEmits<{
   doneEditing: [];
 }>();
 
-const taskStore = useTaskStore();
-function updateTask() {
-  taskStore.save(props.task);
+async function updateTask() {
+  await taskStore.save(props.task);
   emit("doneEditing");
 }
 
-function deleteTask() {
-  taskStore.remove(props.task);
+async function deleteTask() {
+  await taskStore.remove(props.task);
   emit("doneEditing");
 }
 </script>

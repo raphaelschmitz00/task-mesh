@@ -1,5 +1,5 @@
-import type { Task } from "./Task";
 import { doInObjectStore, get, StoreName, remove, save } from "./db";
+import type { Task } from "./Task";
 
 export class Deadline {
   id: number = 0;
@@ -15,7 +15,7 @@ export class Deadline {
 export class DeadlineStore {
   save = (deadline: Deadline) => save(StoreName.deadlines, deadline);
 
-  get = (id: number) => get(StoreName.deadlines, id);
+  get = (id: number) => get<Deadline>(StoreName.deadlines, id);
 
   remove = (deadline: Deadline) => remove(StoreName.deadlines, deadline);
 

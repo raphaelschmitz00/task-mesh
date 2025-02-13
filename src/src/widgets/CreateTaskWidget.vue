@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactive } from "vue";
-import { useTaskStore, Task, TaskStatus } from "@/stores/Task";
+import { taskStore, Task, TaskStatus } from "@/stores/Task";
 import StandardButton from "@/components/buttons/TmButton.vue";
 import StandardInput from "@/components/forms/TmInput.vue";
 import TmCard from "@/components/cards/TmCard.vue";
@@ -12,10 +12,8 @@ class State {
 
 const state = reactive(new State());
 
-const taskStore = useTaskStore();
-
-function createTask() {
-  taskStore.save({ ...state.task });
+async function createTask() {
+  await taskStore.save({ ...state.task });
   state.task.status = TaskStatus.ToDo;
   state.task.name = "";
 }
