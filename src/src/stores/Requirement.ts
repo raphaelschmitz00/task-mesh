@@ -20,6 +20,63 @@ export class RequirementStore {
   get = (id: number) => get<Requirement>(StoreName.requirements, id);
 
   remove = (deadline: Requirement) => remove(StoreName.requirements, deadline);
+
+  async query(predicate: (requirement: Requirement) => boolean) {
+    return await doInObjectStore(
+      StoreName.requirements,
+      async (store) =>
+        new Promise<Requirement[]>((resolve, reject) => {
+          const requirements = new Array<Requirement>();
+
+          const request = store.openCursor();
+          request.onsuccess = (event) => {
+            const eventTarget = event.target as IDBRequest<IDBCursorWithValue>;
+            const cursor = eventTarget.result;
+            if (!cursor) {
+              resolve(requirements);
+              return;
+            }
+
+            const requirement = cursor.value as Requirement;
+            if (predicate(requirement)) {
+              requirements.push(requirement);
+            }
+            cursor.continue();
+          };
+          request.onerror = () => reject(request.error);
+        }),
+    );
+  }
+
+  async removeFromTask(dependentTask: Task, requiredTasks: Task[]) {
+    await doInObjectStore(
+      StoreName.requirements,
+      async (store) =>
+        new Promise<void>((resolve, reject) => {
+          const taskIds = requiredTasks.map((x) => x.id);
+
+          const request = store.openCursor();
+          request.onsuccess = (event) => {
+            const eventTarget = event.target as IDBRequest<IDBCursorWithValue>;
+            const cursor = eventTarget.result;
+            if (!cursor) {
+              resolve();
+              return;
+            }
+
+            const requirement = cursor.value as Requirement;
+            if (
+              requirement.dependentTaskId === dependentTask.id &&
+              taskIds.includes(requirement.requiredTaskId)
+            ) {
+              cursor.delete();
+            }
+            cursor.continue();
+          };
+          request.onerror = () => reject(request.error);
+        }),
+    );
+  }
 }
 export const requirementStore = new RequirementStore();
 

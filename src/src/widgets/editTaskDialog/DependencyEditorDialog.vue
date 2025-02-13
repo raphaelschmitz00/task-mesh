@@ -8,7 +8,7 @@ import TmList from "@/components/lists/TmList.vue";
 import TmActionItem from "@/components/lists/TmActionItem.vue";
 import TmCardActionSection from "@/components/cards/TmCardActionSection.vue";
 import TmFlatButton from "@/components/buttons/TmFlatButton.vue";
-import { Requirement, useRequirementStore } from "@/stores/Requirement";
+import { Requirement, requirementStore } from "@/stores/Requirement";
 
 const model = defineModel<boolean>();
 
@@ -19,12 +19,20 @@ const props = defineProps<{
 class State {
   addedTasks: Task[] = [];
   removedTasks: Task[] = [];
+  currentRequiredTasks: Task[] = [];
 }
 
 const state = reactive(new State());
 
 const taskStore = useTaskStore();
-const requirementStore = useRequirementStore();
+
+watch(
+  () => props.task,
+  async () =>
+    (state.currentRequiredTasks = await requirementStore.query(
+      (x) => x.dependentTaskId == props.task.id,
+    )),
+);
 
 const currentRequiredTasks = computed(() =>
   requirementStore.getRequiredTasks(props.task),
@@ -57,23 +65,12 @@ function reset() {
   state.removedTasks.length = 0;
 }
 
-function exitSavingChanges() {
+async function exitSavingChanges() {
   for (const task of state.addedTasks) {
-    requirementStore.save(new Requirement(task.id, props.task.id));
+    await requirementStore.save(new Requirement(task.id, props.task.id));
   }
 
-  for (const task of state.removedTasks) {
-    const requirement = requirementStore.query(
-      (x) =>
-        x.requiredTaskId === task.id && x.dependentTaskId === props.task.id,
-    )[0];
-
-    if (!requirement) {
-      throw new Error(`No Requirement ${props.task.id} => ${task.id}`);
-    }
-
-    requirementStore.remove(requirement);
-  }
+  await requirementStore.removeFromTask(props.task, state.removedTasks);
 
   reset();
   model.value = false;

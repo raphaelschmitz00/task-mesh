@@ -1,10 +1,8 @@
 import { Task, taskStore } from "@/stores/Task";
 import { Deadline, deadlineStore } from "./stores/Deadline";
-import { Requirement, useRequirementStore } from "./stores/Requirement";
+import { Requirement, requirementStore } from "./stores/Requirement";
 
 export default async function addDevData() {
-  const requirementStore = useRequirementStore();
-
   const task1 = new Task("Do the Dishes");
   await taskStore.save(task1);
 
@@ -13,15 +11,15 @@ export default async function addDevData() {
 
   const task9 = new Task("Put in black laundry");
   await taskStore.save(task9);
-  requirementStore.save(new Requirement(task8.id, task9.id));
+  await requirementStore.save(new Requirement(task8.id, task9.id));
 
   const task10 = new Task("Hang up white laundry");
   await taskStore.save(task10);
-  requirementStore.save(new Requirement(task9.id, task10.id));
+  await requirementStore.save(new Requirement(task9.id, task10.id));
 
   const task11 = new Task("Put in white laundry");
   await taskStore.save(task11);
-  requirementStore.save(new Requirement(task10.id, task11.id));
+  await requirementStore.save(new Requirement(task10.id, task11.id));
   await deadlineStore.save(new Deadline(task11.id, new Date("2030-02-05")));
 
   const task12 = new Task("Vacuum the floor");
@@ -30,6 +28,6 @@ export default async function addDevData() {
 
   const task13 = new Task("Wipe the floor");
   await taskStore.save(task13);
-  requirementStore.save(new Requirement(task12.id, task13.id));
+  await requirementStore.save(new Requirement(task12.id, task13.id));
   await deadlineStore.save(new Deadline(task13.id, new Date("2030-02-20")));
 }
