@@ -119,6 +119,36 @@ export async function get<T>(storeName: StoreName, id: number) {
   );
 }
 
+export async function query<T>(
+  storeName: StoreName,
+  predicate: (requirement: T) => boolean,
+) {
+  return await doInObjectStore(
+    storeName,
+    async (store) =>
+      new Promise<T[]>((resolve, reject) => {
+        const items = new Array<T>();
+
+        const request = store.openCursor();
+        request.onsuccess = (event) => {
+          const eventTarget = event.target as IDBRequest<IDBCursorWithValue>;
+          const cursor = eventTarget.result;
+          if (!cursor) {
+            resolve(items);
+            return;
+          }
+
+          const item = cursor.value as T;
+          if (predicate(item)) {
+            items.push(item);
+          }
+          cursor.continue();
+        };
+        request.onerror = () => reject(request.error);
+      }),
+  );
+}
+
 export async function remove(storeName: StoreName, entity: Entity) {
   return await doInObjectStore(
     storeName,

@@ -28,18 +28,22 @@ const taskStore = useTaskStore();
 
 watch(
   () => props.task,
-  async () =>
-    (state.currentRequiredTasks = await requirementStore.query(
+  async () => {
+    const requirements = await requirementStore.query(
       (x) => x.dependentTaskId == props.task.id,
-    )),
-);
-
-const currentRequiredTasks = computed(() =>
-  requirementStore.getRequiredTasks(props.task),
+    );
+    const tasks = new Array<Task>();
+    state.currentRequiredTasks.length = 0;
+    for await (const requirement of requirements) {
+      const task = taskStore.get(requirement.requiredTaskId)!;
+      tasks.push(task);
+    }
+    state.currentRequiredTasks.push(...tasks);
+  },
 );
 
 const chosenTasks = computed(() =>
-  [...currentRequiredTasks.value, ...state.addedTasks].filter(
+  [...state.currentRequiredTasks, ...state.addedTasks].filter(
     (x) => !state.removedTasks.includes(x),
   ),
 );

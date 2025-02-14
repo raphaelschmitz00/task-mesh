@@ -1,8 +1,6 @@
 import { type Deadline, deadlineStore } from "@/stores/Deadline";
-import { useRequirementStore } from "@/stores/Requirement";
+import { requirementStore } from "@/stores/Requirement";
 import { type Task } from "@/stores/Task";
-
-const requirementStore = useRequirementStore();
 
 export class DateGroup {
   deadline?: Deadline;
@@ -66,8 +64,9 @@ export default async function sortTasksIntoDateGroups(tasks: Task[]) {
         group.tasks.push(task);
       }
 
-      requirementStore
-        .getRequiredTasks(task)
+      const requirements = await requirementStore.getRequiredTasks(task);
+
+      requirements
         .filter((x) => remainingTasks.includes(x))
         .forEach((x) => tasksToProcess.push(x));
     }

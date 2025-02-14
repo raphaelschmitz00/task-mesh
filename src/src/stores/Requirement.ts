@@ -1,6 +1,4 @@
-import { reactive } from "vue";
-import { defineStore } from "pinia";
-import { doInObjectStore, get, StoreName, remove, save } from "./db";
+import { get, query, StoreName, remove, save } from "./db";
 import { TaskStatus, useTaskStore, type Task } from "./Task";
 
 export class Requirement {
@@ -22,96 +20,35 @@ export class RequirementStore {
   remove = (deadline: Requirement) => remove(StoreName.requirements, deadline);
 
   async query(predicate: (requirement: Requirement) => boolean) {
-    return await doInObjectStore(
-      StoreName.requirements,
-      async (store) =>
-        new Promise<Requirement[]>((resolve, reject) => {
-          const requirements = new Array<Requirement>();
-
-          const request = store.openCursor();
-          request.onsuccess = (event) => {
-            const eventTarget = event.target as IDBRequest<IDBCursorWithValue>;
-            const cursor = eventTarget.result;
-            if (!cursor) {
-              resolve(requirements);
-              return;
-            }
-
-            const requirement = cursor.value as Requirement;
-            if (predicate(requirement)) {
-              requirements.push(requirement);
-            }
-            cursor.continue();
-          };
-          request.onerror = () => reject(request.error);
-        }),
-    );
+    return await query(StoreName.requirements, predicate);
   }
 
   async removeFromTask(dependentTask: Task, requiredTasks: Task[]) {
-    await doInObjectStore(
+    const taskIds = requiredTasks.map((x) => x.id);
+    const requirements = await query<Requirement>(
       StoreName.requirements,
-      async (store) =>
-        new Promise<void>((resolve, reject) => {
-          const taskIds = requiredTasks.map((x) => x.id);
-
-          const request = store.openCursor();
-          request.onsuccess = (event) => {
-            const eventTarget = event.target as IDBRequest<IDBCursorWithValue>;
-            const cursor = eventTarget.result;
-            if (!cursor) {
-              resolve();
-              return;
-            }
-
-            const requirement = cursor.value as Requirement;
-            if (
-              requirement.dependentTaskId === dependentTask.id &&
-              taskIds.includes(requirement.requiredTaskId)
-            ) {
-              cursor.delete();
-            }
-            cursor.continue();
-          };
-          request.onerror = () => reject(request.error);
-        }),
+      (x) =>
+        x.dependentTaskId === dependentTask.id &&
+        taskIds.includes(x.requiredTaskId),
     );
+    for await (const requirement of requirements) {
+      await remove(StoreName.requirements, requirement);
+    }
+  }
+
+  async getRequiredTasks(task: Task) {
+    const requirements = await query<Requirement>(
+      StoreName.requirements,
+      (x) => x.dependentTaskId === task.id,
+    );
+
+    const taskStore = useTaskStore();
+    return requirements.map((x) => taskStore.get(x.requiredTaskId)!);
+  }
+
+  async getBlockingTasks(task: Task) {
+    const requiredTasks = await this.getRequiredTasks(task);
+    return requiredTasks.filter((x) => x.status !== TaskStatus.Done);
   }
 }
 export const requirementStore = new RequirementStore();
-
-const requirements = reactive(new Map<number, Requirement>());
-
-export const useRequirementStore = defineStore("Requirements", () => {
-  let keyCounter = 1;
-
-  function save(requirement: Requirement) {
-    requirement.id ||= keyCounter++;
-    requirements.set(requirement.id, requirement);
-  }
-
-  function get(id: number) {
-    return requirements.get(id);
-  }
-
-  function query(predicate: (requirement: Requirement) => boolean) {
-    return Array.from(requirements.values()).filter(predicate);
-  }
-
-  function getRequiredTasks(task: Task) {
-    const taskStore = useTaskStore();
-    return Array.from(requirements.values())
-      .filter((x) => x.dependentTaskId === task.id)
-      .map((x) => taskStore.get(x.requiredTaskId)!);
-  }
-
-  function getBlockingTasks(task: Task) {
-    return getRequiredTasks(task).filter((x) => x.status !== TaskStatus.Done);
-  }
-
-  function remove(requirement: Requirement) {
-    requirements.delete(requirement.id);
-  }
-
-  return { save, get, getRequiredTasks, getBlockingTasks, query, remove };
-});
