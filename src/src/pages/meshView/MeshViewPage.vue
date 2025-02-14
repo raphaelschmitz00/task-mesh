@@ -9,8 +9,10 @@ class State {
 }
 const state = reactive(new State());
 
-const tasks = await taskStore.query(() => true);
-state.dateGroups = await sortTasksIntoDateGroups(tasks);
+taskStore
+  .query(() => true)
+  .then((x) => sortTasksIntoDateGroups(x))
+  .then((x) => state.dateGroups == x);
 </script>
 
 <template>

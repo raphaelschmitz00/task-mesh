@@ -9,7 +9,7 @@ class State {
 }
 const state = reactive(new State());
 
-state.tasks = await taskStore.query(() => true);
+taskStore.query(() => true).then((x) => (state.tasks = x));
 
 const getWithStatus = (status: TaskStatus) =>
   state.tasks.filter((x) => x.status === status);

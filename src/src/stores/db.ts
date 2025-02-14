@@ -15,7 +15,10 @@ function setUpDb(
   request.onupgradeneeded = () => {
     const db = request.result;
 
-    const taskStore = db.createObjectStore(StoreName.tasks, { keyPath: "id" });
+    const taskStore = db.createObjectStore(StoreName.tasks, {
+      keyPath: "id",
+      autoIncrement: true,
+    });
     taskStore.createIndex("ix_name", "name", { unique: false });
     taskStore.createIndex("ix_status", "status", { unique: false });
 
@@ -28,6 +31,7 @@ function setUpDb(
 
     const requirementStore = db.createObjectStore(StoreName.requirements, {
       keyPath: "id",
+      autoIncrement: true,
     });
     requirementStore.createIndex("ix_requiredTaskId", "requiredTaskId", {
       unique: false,
@@ -100,8 +104,11 @@ export function removeProperty<T, K extends keyof T>(
 
 export async function save(storeName: StoreName, entity: Entity) {
   await doInObjectStore(storeName, async (store) => {
-    const storableEntity = removeProperty(entity, "id");
-    const request = store.add(storableEntity);
+    const request =
+      entity.id === 0
+        ? store.add(removeProperty(entity, "id"))
+        : store.put({ ...entity });
+
     request.onsuccess = () => (entity.id = request.result as number);
     request.onerror = console.log;
   });
