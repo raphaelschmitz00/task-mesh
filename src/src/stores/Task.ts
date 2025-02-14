@@ -1,6 +1,4 @@
-import { doInObjectStore, get, StoreName, remove, save } from "./db";
-import { reactive } from "vue";
-import { defineStore } from "pinia";
+import { get, query, StoreName, remove, save } from "./db";
 
 export enum TaskStatus {
   ToDo,
@@ -37,32 +35,9 @@ export class TaskStore {
 
   get = (id: number) => get<Task>(StoreName.tasks, id);
 
+  query = (predicate: (task: Task) => boolean) =>
+    query<Task>(StoreName.tasks, predicate);
+
   remove = (deadline: Task) => remove(StoreName.tasks, deadline);
 }
 export const taskStore = new TaskStore();
-
-const tasks = reactive(new Map<number, Task>());
-
-export const useTaskStore = defineStore("Tasks", () => {
-  let keyCounter = 1;
-
-  function save(task: Task) {
-    task.id ||= keyCounter++;
-    tasks.set(task.id, task);
-  }
-
-  function get(id: number) {
-    if (!tasks.has(id)) throw new Error(`No task wth ID ${id}`);
-    return tasks.get(id);
-  }
-
-  function query(predicate: (task: Task) => boolean = () => true) {
-    return Array.from(tasks.values()).filter(predicate);
-  }
-
-  function remove(task: Task) {
-    tasks.delete(task.id);
-  }
-
-  return { save, get, query, remove };
-});

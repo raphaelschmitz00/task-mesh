@@ -1,20 +1,16 @@
 <script setup lang="ts">
-import { reactive, watch } from "vue";
-import { useTaskStore } from "@/stores/Task";
+import { reactive } from "vue";
+import { taskStore } from "@/stores/Task";
 import sortTasksIntoDateGroups, { DateGroup } from "./sortTasksIntoDateGroups";
 import DateView from "@/components/DateView.vue";
-
-const taskStore = useTaskStore();
 
 class State {
   dateGroups: DateGroup[] = [];
 }
 const state = reactive(new State());
 
-watch(
-  () => taskStore.query(),
-  async (x) => (state.dateGroups = await sortTasksIntoDateGroups(x)),
-);
+const tasks = await taskStore.query(() => true);
+state.dateGroups = await sortTasksIntoDateGroups(tasks);
 </script>
 
 <template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from "vue";
-import { type Task, useTaskStore } from "@/stores/Task";
+import { type Task, taskStore } from "@/stores/Task";
 import TmDialog from "@/components/dialogs/TmDialog.vue";
 import TmCard from "@/components/cards/TmCard.vue";
 import TmCardSection from "@/components/cards/TmCardSection.vue";
@@ -20,11 +20,10 @@ class State {
   addedTasks: Task[] = [];
   removedTasks: Task[] = [];
   currentRequiredTasks: Task[] = [];
+  unchosenTasks: Task[] = [];
 }
 
 const state = reactive(new State());
-
-const taskStore = useTaskStore();
 
 watch(
   () => props.task,
@@ -35,7 +34,7 @@ watch(
     const tasks = new Array<Task>();
     state.currentRequiredTasks.length = 0;
     for await (const requirement of requirements) {
-      const task = taskStore.get(requirement.requiredTaskId)!;
+      const task = await taskStore.get(requirement.requiredTaskId)!;
       tasks.push(task);
     }
     state.currentRequiredTasks.push(...tasks);
@@ -48,8 +47,10 @@ const chosenTasks = computed(() =>
   ),
 );
 
-const unchosenTasks = computed(() =>
-  taskStore.query((x) => !chosenTasks.value.includes(x)),
+watch(
+  () => chosenTasks,
+  async (x) =>
+    (state.unchosenTasks = await taskStore.query((y) => !x.value.includes(y))),
 );
 
 function addDependency(task: Task) {
@@ -115,7 +116,7 @@ watch(
         <span>Available</span>
         <TmList hasBorder>
           <TmActionItem
-            v-for="unchosenTask in unchosenTasks"
+            v-for="unchosenTask in state.unchosenTasks"
             :key="unchosenTask.id"
             :label="unchosenTask.name"
             icon="add_circle"

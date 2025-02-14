@@ -1,5 +1,5 @@
 import { get, query, StoreName, remove, save } from "./db";
-import { TaskStatus, useTaskStore, type Task } from "./Task";
+import { TaskStatus, taskStore, type Task } from "./Task";
 
 export class Requirement {
   id: number = 0;
@@ -42,8 +42,8 @@ export class RequirementStore {
       (x) => x.dependentTaskId === task.id,
     );
 
-    const taskStore = useTaskStore();
-    return requirements.map((x) => taskStore.get(x.requiredTaskId)!);
+    const taskIds = requirements.map((x) => x.requiredTaskId);
+    return await taskStore.query((x) => taskIds.includes(x.id));
   }
 
   async getBlockingTasks(task: Task) {
