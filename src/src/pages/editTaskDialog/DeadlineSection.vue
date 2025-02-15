@@ -4,6 +4,7 @@ import { type Task } from "@/stores/Task";
 import StandardButton from "@/components/buttons/TmButton.vue";
 import EditDeadlineDialog from "./EditDeadlineDialog.vue";
 import { Deadline, deadlineStore } from "@/stores/Deadline";
+import DateView from "@/components/DateView.vue";
 
 const model = defineModel<Task>({ required: true });
 
@@ -13,16 +14,18 @@ class State {
 }
 const state = reactive(new State());
 
-watch(
-  () => model,
-  async () => (state.deadline = await deadlineStore.getForTask(model.value)),
-);
+async function fetch() {
+  state.deadline = await deadlineStore.getForTask(model.value);
+}
+
+watch(() => model, fetch);
+fetch();
 </script>
 
 <template>
   <span>
     <span v-if="!state.deadline">No Deadline</span>
-    <span v-else>{{ state.deadline.date }}</span>
+    <DateView v-else :date="state.deadline.date" />
     <StandardButton
       icon="add"
       label="Edit"
