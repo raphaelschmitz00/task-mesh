@@ -21,7 +21,7 @@ export default createRouter({
     {
       path: routes.editTask(":id"),
       props: true,
-      component: () => import("./editTaskDialog/EditTaskPage.vue"),
+      component: () => import("./editTask/EditTaskPage.vue"),
     },
     {
       path: "/:pathMatch(.*)*",
