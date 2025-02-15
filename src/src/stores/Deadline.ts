@@ -1,5 +1,4 @@
-import { reactive } from "vue";
-import { defineStore } from "pinia";
+import { doInObjectStore, get, StoreName, remove, save } from "./db";
 import type { Task } from "./Task";
 
 export class Deadline {
@@ -13,27 +12,26 @@ export class Deadline {
   }
 }
 
-const deadlines = reactive(new Map<number, Deadline>());
+export class DeadlineStore {
+  save = (deadline: Deadline) => save(StoreName.deadlines, deadline);
 
-export const useDeadlineStore = defineStore("Deadlines", () => {
-  let keyCounter = 1;
+  get = (id: number) => get<Deadline>(StoreName.deadlines, id);
 
-  function save(deadline: Deadline) {
-    deadline.id ||= keyCounter++;
-    deadlines.set(deadline.id, deadline);
+  remove = (deadline: Deadline) => remove(StoreName.deadlines, deadline);
+
+  async getForTask(task: Task) {
+    return await doInObjectStore(
+      StoreName.deadlines,
+      async (store) =>
+        new Promise<Deadline | undefined>((resolve, reject) => {
+          const index = store.index("ix_taskId");
+          const request = index.get(task.id);
+          request.onerror = reject;
+          request.onsuccess = () =>
+            resolve(request.result as Deadline | undefined);
+        }),
+    );
   }
+}
 
-  function get(id: number) {
-    return deadlines.get(id);
-  }
-
-  function remove(deadline: Deadline) {
-    deadlines.delete(deadline.id);
-  }
-
-  function getForTask(task: Task) {
-    return Array.from(deadlines.values()).find((x) => x.taskId === task.id);
-  }
-
-  return { save, get, remove, getForTask };
-});
+export const deadlineStore = new DeadlineStore();

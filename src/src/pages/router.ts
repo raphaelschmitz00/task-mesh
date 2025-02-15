@@ -4,6 +4,7 @@ import StatusBoardPage from "./status/StatusBoardPage.vue";
 export const routes = {
   home: () => "/",
   meshView: () => "/mesh/",
+  editTask: (id: number | string) => `/task/${id}`,
 };
 
 export default createRouter({
@@ -16,6 +17,11 @@ export default createRouter({
     {
       path: routes.meshView(),
       component: () => import("./meshView/MeshViewPage.vue"),
+    },
+    {
+      path: routes.editTask(":id"),
+      props: true,
+      component: () => import("./editTask/EditTaskPage.vue"),
     },
     {
       path: "/:pathMatch(.*)*",

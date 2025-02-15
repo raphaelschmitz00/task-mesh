@@ -6,6 +6,7 @@
   "scripts": {
     "setup": "npm i -g pnpm@9.15.2",
     "refresh": "pnpm i --frozen-lockfile",
+    "addSampleData": "tsx ./devTools/addDevData",
     "dev": "vite",
     "preview": "vite preview --host",
     "format:lint": "eslint . --fix",
@@ -22,6 +23,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.16.16",
+    "@vueuse/core": "^12.7.0",
     "pinia": "^2.3.1",
     "quasar": "^2.17.7",
     "vue": "^3.5.13",
@@ -40,11 +42,17 @@
     "eslint-plugin-vue": "^9.32.0",
     "jiti": "^2.4.2",
     "prettier": "^3.4.2",
+    "tsx": "^4.19.2",
     "typescript": "~5.7.3",
     "vite": "^6.0.11",
     "vite-plugin-pwa": "^0.21.1",
     "vite-plugin-vue-devtools": "^7.7.0",
     "vue-tsc": "^2.2.0",
     "workbox-window": "^7.3.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   }
 }

@@ -3,14 +3,12 @@ import type { Task } from "@/stores/Task";
 import TaskStatusDropdown from "@/widgets/TaskStatusDropdown.vue";
 import TaskStatusView from "@/widgets/TaskStatusView.vue";
 
-defineProps<{
-  task: Task;
-}>();
+const model = defineModel<Task>({ required: true });
 </script>
 
 <template>
   <div>
-    <TaskStatusView :status="task.status" class="statusRowItem" />
-    <TaskStatusDropdown :model-value="task.status" class="statusRowItem" />
+    <TaskStatusView :status="model.status" class="statusRowItem" />
+    <TaskStatusDropdown v-model="model.status" class="statusRowItem" />
   </div>
 </template>

@@ -1,13 +1,18 @@
 <script setup lang="ts">
-import { useTaskStore, TaskStatus } from "@/stores/Task";
+import { taskStore, type Task, TaskStatus } from "@/stores/Task";
 import CreateTaskWidget from "@/widgets/CreateTaskWidget.vue";
 import TaskEntryView from "./TaskEntryView.vue";
-import { computed } from "vue";
+import { computed, reactive } from "vue";
 
-const taskStore = useTaskStore();
+class State {
+  tasks = new Array<Task>();
+}
+const state = reactive(new State());
+
+taskStore.query(() => true).then((x) => (state.tasks = x));
 
 const getWithStatus = (status: TaskStatus) =>
-  taskStore.query((x) => x.status === status);
+  state.tasks.filter((x) => x.status === status);
 
 const todos = computed(() => getWithStatus(TaskStatus.ToDo));
 const doings = computed(() => getWithStatus(TaskStatus.Doing));

@@ -1,6 +1,5 @@
-import { reactive } from "vue";
-import { defineStore } from "pinia";
-import { TaskStatus, useTaskStore, type Task } from "./Task";
+import { get, query, StoreName, remove, save } from "./db";
+import { TaskStatus, taskStore, type Task } from "./Task";
 
 export class Requirement {
   id: number = 0;
@@ -13,38 +12,43 @@ export class Requirement {
   }
 }
 
-const requirements = reactive(new Map<number, Requirement>());
+export class RequirementStore {
+  save = (deadline: Requirement) => save(StoreName.requirements, deadline);
 
-export const useRequirementStore = defineStore("Requirements", () => {
-  let keyCounter = 1;
+  get = (id: number) => get<Requirement>(StoreName.requirements, id);
 
-  function save(requirement: Requirement) {
-    requirement.id ||= keyCounter++;
-    requirements.set(requirement.id, requirement);
+  remove = (deadline: Requirement) => remove(StoreName.requirements, deadline);
+
+  async query(predicate: (requirement: Requirement) => boolean) {
+    return await query(StoreName.requirements, predicate);
   }
 
-  function get(id: number) {
-    return requirements.get(id);
+  async removeFromTask(dependentTask: Task, requiredTasks: Task[]) {
+    const taskIds = requiredTasks.map((x) => x.id);
+    const requirements = await query<Requirement>(
+      StoreName.requirements,
+      (x) =>
+        x.dependentTaskId === dependentTask.id &&
+        taskIds.includes(x.requiredTaskId),
+    );
+    for await (const requirement of requirements) {
+      await remove(StoreName.requirements, requirement);
+    }
   }
 
-  function query(predicate: (requirement: Requirement) => boolean) {
-    return Array.from(requirements.values()).filter(predicate);
+  async getRequiredTasks(task: Task) {
+    const requirements = await query<Requirement>(
+      StoreName.requirements,
+      (x) => x.dependentTaskId === task.id,
+    );
+
+    const taskIds = requirements.map((x) => x.requiredTaskId);
+    return await taskStore.query((x) => taskIds.includes(x.id));
   }
 
-  function getRequiredTasks(task: Task) {
-    const taskStore = useTaskStore();
-    return Array.from(requirements.values())
-      .filter((x) => x.dependentTaskId === task.id)
-      .map((x) => taskStore.get(x.requiredTaskId)!);
+  async getBlockingTasks(task: Task) {
+    const requiredTasks = await this.getRequiredTasks(task);
+    return requiredTasks.filter((x) => x.status !== TaskStatus.Done);
   }
-
-  function getBlockingTasks(task: Task) {
-    return getRequiredTasks(task).filter((x) => x.status !== TaskStatus.Done);
-  }
-
-  function remove(requirement: Requirement) {
-    requirements.delete(requirement.id);
-  }
-
-  return { save, get, getRequiredTasks, getBlockingTasks, query, remove };
-});
+}
+export const requirementStore = new RequirementStore();
