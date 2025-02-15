@@ -32,11 +32,11 @@ async function deleteTask() {
     </TmCardSection>
 
     <TmCardSection>
-      <DeadlineSection :task="model" />
+      <DeadlineSection v-model="model" />
     </TmCardSection>
 
     <TmCardSection>
-      <RequirementSection :task="model" />
+      <RequirementSection v-model="model" />
     </TmCardSection>
 
     <TmCardSection>

@@ -5,9 +5,7 @@ import StandardButton from "@/components/buttons/TmButton.vue";
 import DependencyEditorDialog from "./DependencyEditorDialog.vue";
 import { requirementStore } from "@/stores/Requirement";
 
-const props = defineProps<{
-  task: Task;
-}>();
+const model = defineModel<Task>({ required: true });
 
 class State {
   editDialogIsShown = false;
@@ -16,9 +14,9 @@ class State {
 const state = reactive(new State());
 
 watch(
-  () => props.task,
+  () => model,
   async (x) =>
-    (state.blockingTasks = await requirementStore.getBlockingTasks(x)),
+    (state.blockingTasks = await requirementStore.getBlockingTasks(x.value)),
 );
 
 function openDependencyDialog() {
@@ -37,6 +35,6 @@ function openDependencyDialog() {
     </div>
 
     <StandardButton icon="add" label="Add" @click="openDependencyDialog" />
-    <DependencyEditorDialog v-model="state.editDialogIsShown" :task="task" />
+    <DependencyEditorDialog v-model="state.editDialogIsShown" :task="model" />
   </span>
 </template>

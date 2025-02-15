@@ -30,6 +30,7 @@ async function fetchDeadline() {
 async function exitSavingChanges() {
   const date = new Date(state.chosenDateTime);
   const deadline = state.deadline || new Deadline(props.task.id, date);
+  deadline.date = date;
   await deadlineStore.save(deadline);
   model.value = false;
 }

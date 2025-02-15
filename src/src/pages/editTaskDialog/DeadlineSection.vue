@@ -5,9 +5,7 @@ import StandardButton from "@/components/buttons/TmButton.vue";
 import EditDeadlineDialog from "./EditDeadlineDialog.vue";
 import { Deadline, deadlineStore } from "@/stores/Deadline";
 
-const props = defineProps<{
-  task: Task;
-}>();
+const model = defineModel<Task>({ required: true });
 
 class State {
   editDialogIsShown = false;
@@ -16,8 +14,8 @@ class State {
 const state = reactive(new State());
 
 watch(
-  () => props.task,
-  async () => (state.deadline = await deadlineStore.getForTask(props.task)),
+  () => model,
+  async () => (state.deadline = await deadlineStore.getForTask(model.value)),
 );
 </script>
 
@@ -30,6 +28,6 @@ watch(
       label="Edit"
       @click="state.editDialogIsShown = true"
     />
-    <EditDeadlineDialog v-model="state.editDialogIsShown" :task="task" />
+    <EditDeadlineDialog v-model="state.editDialogIsShown" :task="model" />
   </span>
 </template>

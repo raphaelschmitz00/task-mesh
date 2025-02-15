@@ -23,11 +23,12 @@ export class DeadlineStore {
     return await doInObjectStore(
       StoreName.deadlines,
       async (store) =>
-        new Promise<Deadline>((resolve, reject) => {
+        new Promise<Deadline | undefined>((resolve, reject) => {
           const index = store.index("ix_taskId");
           const request = index.get(task.id);
           request.onerror = reject;
-          request.onsuccess = () => resolve(request.result as Deadline);
+          request.onsuccess = () =>
+            resolve(request.result as Deadline | undefined);
         }),
     );
   }
