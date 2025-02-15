@@ -9,6 +9,7 @@ import TmActionItem from "@/components/lists/TmActionItem.vue";
 import TmCardActionSection from "@/components/cards/TmCardActionSection.vue";
 import TmFlatButton from "@/components/buttons/TmFlatButton.vue";
 import { Requirement, requirementStore } from "@/stores/Requirement";
+import DependencySearch from "./DependencySearch.vue";
 
 const model = defineModel<boolean>();
 
@@ -17,41 +18,47 @@ const props = defineProps<{
 }>();
 
 class State {
+  storedRequiredTasks: Task[] = [];
   addedTasks: Task[] = [];
   removedTasks: Task[] = [];
-  currentRequiredTasks: Task[] = [];
-  unchosenTasks: Task[] = [];
 }
-
 const state = reactive(new State());
 
+const emit = defineEmits<{
+  dependenciesChanged: [];
+}>();
+
+async function fetchRequiredTasks() {
+  const requirements = await requirementStore.query(
+    (x) => x.dependentTaskId == props.task.id,
+  );
+
+  const tasks = new Array<Task>();
+  state.storedRequiredTasks.length = 0;
+  for await (const requirement of requirements) {
+    const task = await taskStore.get(requirement.requiredTaskId)!;
+    tasks.push(task);
+  }
+  state.storedRequiredTasks.push(...tasks);
+}
+
 watch(
-  () => props.task,
-  async () => {
-    const requirements = await requirementStore.query(
-      (x) => x.dependentTaskId == props.task.id,
-    );
-    const tasks = new Array<Task>();
-    state.currentRequiredTasks.length = 0;
-    for await (const requirement of requirements) {
-      const task = await taskStore.get(requirement.requiredTaskId)!;
-      tasks.push(task);
-    }
-    state.currentRequiredTasks.push(...tasks);
-  },
+  () => model.value,
+  (x) => x && fetchRequiredTasks(),
 );
+watch(() => props.task, fetchRequiredTasks);
+fetchRequiredTasks();
 
 const chosenTasks = computed(() =>
-  [...state.currentRequiredTasks, ...state.addedTasks].filter(
+  [...state.storedRequiredTasks, ...state.addedTasks].filter(
     (x) => !state.removedTasks.includes(x),
   ),
 );
 
-watch(
-  () => chosenTasks,
-  async (x) =>
-    (state.unchosenTasks = await taskStore.query((y) => !x.value.includes(y))),
-);
+const tasksToExcludeFromAvailable = computed(() => [
+  props.task,
+  ...chosenTasks.value,
+]);
 
 function addDependency(task: Task) {
   const indexInRemovedTasks = state.removedTasks.indexOf(task);
@@ -79,6 +86,7 @@ async function exitSavingChanges() {
 
   reset();
   model.value = false;
+  emit("dependenciesChanged");
 }
 
 function exitDiscardingChanges() {
@@ -114,15 +122,10 @@ watch(
 
       <TmCardSection class="q-pt-none">
         <span>Available</span>
-        <TmList hasBorder>
-          <TmActionItem
-            v-for="unchosenTask in state.unchosenTasks"
-            :key="unchosenTask.id"
-            :label="unchosenTask.name"
-            icon="add_circle"
-            @click="addDependency(unchosenTask)"
-          />
-        </TmList>
+        <DependencySearch
+          :exclude="tasksToExcludeFromAvailable"
+          @taskChosen="addDependency"
+        />
       </TmCardSection>
 
       <TmCardActionSection>

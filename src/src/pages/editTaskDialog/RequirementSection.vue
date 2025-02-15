@@ -13,11 +13,12 @@ class State {
 }
 const state = reactive(new State());
 
-watch(
-  () => model,
-  async (x) =>
-    (state.blockingTasks = await requirementStore.getBlockingTasks(x.value)),
-);
+async function fetch() {
+  state.blockingTasks = await requirementStore.getBlockingTasks(model.value);
+}
+
+watch(() => model, fetch);
+fetch();
 
 function openDependencyDialog() {
   state.editDialogIsShown = true;
@@ -35,6 +36,10 @@ function openDependencyDialog() {
     </div>
 
     <StandardButton icon="add" label="Add" @click="openDependencyDialog" />
-    <DependencyEditorDialog v-model="state.editDialogIsShown" :task="model" />
+    <DependencyEditorDialog
+      v-model="state.editDialogIsShown"
+      :task="model"
+      @dependencies-changed="fetch"
+    />
   </span>
 </template>
