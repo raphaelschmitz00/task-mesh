@@ -1,8 +1,8 @@
 import { Task, taskStore } from "@/stores/Task";
-import { Deadline, deadlineStore } from "./stores/Deadline";
-import { Requirement, requirementStore } from "./stores/Requirement";
+import { Deadline, deadlineStore } from "@/stores/Deadline";
+import { Requirement, requirementStore } from "@/stores/Requirement";
 
-export default async function addDevData() {
+async function addDevData() {
   const task1 = new Task("Do the Dishes");
   await taskStore.save(task1);
 
@@ -31,3 +31,5 @@ export default async function addDevData() {
   await requirementStore.save(new Requirement(task12.id, task13.id));
   await deadlineStore.save(new Deadline(task13.id, new Date("2030-02-20")));
 }
+
+addDevData();
