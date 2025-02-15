@@ -9,7 +9,7 @@ import TmActionItem from "@/components/lists/TmActionItem.vue";
 import TmCardActionSection from "@/components/cards/TmCardActionSection.vue";
 import TmFlatButton from "@/components/buttons/TmFlatButton.vue";
 import { Requirement, requirementStore } from "@/stores/Requirement";
-import DependencySearch from "./DependencySearch.vue";
+import RequirementSearch from "./RequirementSearch.vue";
 
 const model = defineModel<boolean>();
 
@@ -25,7 +25,7 @@ class State {
 const state = reactive(new State());
 
 const emit = defineEmits<{
-  dependenciesChanged: [];
+  requirementsChanged: [];
 }>();
 
 async function fetchRequiredTasks() {
@@ -60,13 +60,13 @@ const tasksToExcludeFromAvailable = computed(() => [
   ...chosenTasks.value,
 ]);
 
-function addDependency(task: Task) {
+function addRequirement(task: Task) {
   const indexInRemovedTasks = state.removedTasks.indexOf(task);
   if (indexInRemovedTasks === -1) state.addedTasks.push(task);
   else state.removedTasks.splice(indexInRemovedTasks, 1);
 }
 
-function removeDependency(task: Task) {
+function removeRequirement(task: Task) {
   const indexInAddedTasks = state.addedTasks.indexOf(task);
   if (indexInAddedTasks === -1) state.removedTasks.push(task);
   else state.addedTasks.splice(indexInAddedTasks, 1);
@@ -86,7 +86,7 @@ async function exitSavingChanges() {
 
   reset();
   model.value = false;
-  emit("dependenciesChanged");
+  emit("requirementsChanged");
 }
 
 function exitDiscardingChanges() {
@@ -104,7 +104,7 @@ watch(
   <TmDialog v-model="model">
     <TmCard>
       <TmCardSection>
-        <h2>Add Dependency</h2>
+        <h2>Add Requirement</h2>
       </TmCardSection>
 
       <TmCardSection class="q-pt-none">
@@ -115,16 +115,16 @@ watch(
             :key="chosenTask.id"
             :label="chosenTask.name"
             icon="remove_circle"
-            @click="removeDependency(chosenTask)"
+            @click="removeRequirement(chosenTask)"
           />
         </TmList>
       </TmCardSection>
 
       <TmCardSection class="q-pt-none">
         <span>Available</span>
-        <DependencySearch
+        <RequirementSearch
           :exclude="tasksToExcludeFromAvailable"
-          @taskChosen="addDependency"
+          @taskChosen="addRequirement"
         />
       </TmCardSection>
 

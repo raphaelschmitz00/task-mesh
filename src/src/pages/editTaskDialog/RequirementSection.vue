@@ -2,7 +2,7 @@
 import { reactive, watch } from "vue";
 import { type Task } from "@/stores/Task";
 import StandardButton from "@/components/buttons/TmButton.vue";
-import DependencyEditorDialog from "./DependencyEditorDialog.vue";
+import RequirementEditorDialog from "./RequirementEditorDialog.vue";
 import { requirementStore } from "@/stores/Requirement";
 
 const model = defineModel<Task>({ required: true });
@@ -19,10 +19,6 @@ async function fetch() {
 
 watch(() => model, fetch);
 fetch();
-
-function openDependencyDialog() {
-  state.editDialogIsShown = true;
-}
 </script>
 
 <template>
@@ -35,11 +31,15 @@ function openDependencyDialog() {
       </div>
     </div>
 
-    <StandardButton icon="add" label="Add" @click="openDependencyDialog" />
-    <DependencyEditorDialog
+    <StandardButton
+      icon="add"
+      label="Add"
+      @click="state.editDialogIsShown = true"
+    />
+    <RequirementEditorDialog
       v-model="state.editDialogIsShown"
       :task="model"
-      @dependencies-changed="fetch"
+      @requirements-changed="fetch"
     />
   </span>
 </template>
