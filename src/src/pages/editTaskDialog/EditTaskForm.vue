@@ -7,41 +7,40 @@ import DeadlineSection from "./DeadlineSection.vue";
 import RequirementSection from "./RequirementSection.vue";
 import StatusSection from "./StatusSection.vue";
 
-const props = defineProps<{
-  task: Task;
-}>();
+const model = defineModel<Task>({ required: true });
 
 const emit = defineEmits<{
   doneEditing: [];
 }>();
 
 async function updateTask() {
-  await taskStore.save(props.task);
+  console.log("updateTask", model.value);
+  await taskStore.save(model.value);
   emit("doneEditing");
 }
 
 async function deleteTask() {
-  await taskStore.remove(props.task);
+  await taskStore.remove(model.value);
   emit("doneEditing");
 }
 </script>
 
 <template>
-  <TmCard v-if="task">
+  <TmCard v-if="model">
     <TmCardSection>
-      <h1>{{ `#${task.id} - ${task.name}` }}</h1>
+      <h1>{{ `#${model.id} - ${model.name}` }}</h1>
     </TmCardSection>
 
     <TmCardSection>
-      <DeadlineSection :task="task" />
+      <DeadlineSection :task="model" />
     </TmCardSection>
 
     <TmCardSection>
-      <RequirementSection :task="task" />
+      <RequirementSection :task="model" />
     </TmCardSection>
 
     <TmCardSection>
-      <StatusSection :task="task" />
+      <StatusSection v-model="model" />
     </TmCardSection>
 
     <TmCardSection>

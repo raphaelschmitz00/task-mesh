@@ -4,18 +4,15 @@ import { type Task } from "@/stores/Task";
 import { requirementStore } from "@/stores/Requirement";
 import TmCard from "@/components/cards/TmCard.vue";
 import TmCardSection from "@/components/cards/TmCardSection.vue";
-import UpdateTaskWidget from "@/widgets/UpdateTaskWidget.vue";
 import TaskStatusView from "@/widgets/TaskStatusView.vue";
-import EditTaskDialog from "@/widgets/editTaskDialog/EditTaskDialog.vue";
-import TmButton from "@/components/buttons/TmButton.vue";
+import TmLinkButton from "@/components/buttons/TmLinkButton.vue";
+import { routes } from "../router";
 
 const props = defineProps<{
   task: Task;
 }>();
 
 class State {
-  isEditing = false;
-  showEditDialog = false;
   blockingTasks = new Array<Task>();
 }
 
@@ -34,17 +31,10 @@ watch(
       <div v-if="state.blockingTasks.length">❌ Is Blocked</div>
       <div>
         <TaskStatusView :status="task.status" />
-        # {{ task.id }} -
-        <UpdateTaskWidget
-          v-if="state.isEditing"
-          :task="task"
-          @updated="state.isEditing = false"
-        />
-        <span v-else> {{ task.name }}</span>
+        # {{ task.id }} - {{ task.name }}
       </div>
 
-      <TmButton icon="edit" label="Edit" @click="state.showEditDialog = true" />
-      <EditTaskDialog v-model="state.showEditDialog" :task="task" />
+      <TmLinkButton icon="edit" label="Edit" :path="routes.editTask(task.id)" />
     </TmCardSection>
   </TmCard>
 </template>
