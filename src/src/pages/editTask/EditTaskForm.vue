@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { type Task, taskStore } from "@/stores/Task";
 import Button from "@/components/buttons/Button.vue";
-import TmCard from "@/components/cards/TmCard.vue";
-import TmCardSection from "@/components/cards/TmCardSection.vue";
+import Card from "@/components/cards/Card.vue";
+import CardSection from "@/components/cards/CardSection.vue";
 import DeadlineSection from "./DeadlineSection.vue";
 import RequirementSection from "./RequirementSection.vue";
 import StatusSection from "./StatusSection.vue";
@@ -26,26 +26,26 @@ async function deleteTask() {
 </script>
 
 <template>
-  <TmCard v-if="model">
-    <TmCardSection>
+  <Card v-if="model">
+    <CardSection>
       <h1>{{ `#${model.id} - ${model.name}` }}</h1>
-    </TmCardSection>
+    </CardSection>
 
-    <TmCardSection>
+    <CardSection>
       <DeadlineSection v-model="model" />
-    </TmCardSection>
+    </CardSection>
 
-    <TmCardSection>
+    <CardSection>
       <RequirementSection v-model="model" />
-    </TmCardSection>
+    </CardSection>
 
-    <TmCardSection>
+    <CardSection>
       <StatusSection v-model="model" />
-    </TmCardSection>
+    </CardSection>
 
-    <TmCardSection>
+    <CardSection>
       <Button icon="delete" label="Delete" @click="deleteTask" />
       <Button icon="save" label="Save" @click="updateTask" />
-    </TmCardSection>
-  </TmCard>
+    </CardSection>
+  </Card>
 </template>

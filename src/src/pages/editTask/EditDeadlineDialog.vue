@@ -2,9 +2,9 @@
 import { reactive, watch } from "vue";
 import { type Task } from "@/stores/Task";
 import TmDialog from "@/components/dialogs/TmDialog.vue";
-import TmCard from "@/components/cards/TmCard.vue";
-import TmCardSection from "@/components/cards/TmCardSection.vue";
-import TmCardActionSection from "@/components/cards/TmCardActionSection.vue";
+import Card from "@/components/cards/Card.vue";
+import CardSection from "@/components/cards/CardSection.vue";
+import CardActionSection from "@/components/cards/CardActionSection.vue";
 import ButtonFlat from "@/components/buttons/ButtonFlat.vue";
 import { Deadline, deadlineStore } from "@/stores/Deadline";
 
@@ -46,22 +46,22 @@ fetchDeadline();
 
 <template>
   <TmDialog v-model="model">
-    <TmCard>
-      <TmCardSection>
+    <Card>
+      <CardSection>
         <h2>Edit Deadline</h2>
-      </TmCardSection>
+      </CardSection>
 
-      <TmCardSection> Current value: {{ state.chosenDateTime }} </TmCardSection>
+      <CardSection> Current value: {{ state.chosenDateTime }} </CardSection>
 
-      <TmCardSection>
+      <CardSection>
         <q-date v-model="state.chosenDateTime" mask="YYYY-MM-DD HH:mm" />
         <q-time v-model="state.chosenDateTime" mask="YYYY-MM-DD HH:mm" />
-      </TmCardSection>
+      </CardSection>
 
-      <TmCardActionSection>
+      <CardActionSection>
         <ButtonFlat label="Cancel" @click="exitDiscardingChanges" />
         <ButtonFlat label="Save Changes" @click="exitSavingChanges" />
-      </TmCardActionSection>
-    </TmCard>
+      </CardActionSection>
+    </Card>
   </TmDialog>
 </template>

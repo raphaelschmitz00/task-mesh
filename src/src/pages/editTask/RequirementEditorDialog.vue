@@ -2,11 +2,11 @@
 import { computed, reactive, watch } from "vue";
 import { type Task, taskStore } from "@/stores/Task";
 import TmDialog from "@/components/dialogs/TmDialog.vue";
-import TmCard from "@/components/cards/TmCard.vue";
-import TmCardSection from "@/components/cards/TmCardSection.vue";
+import Card from "@/components/cards/Card.vue";
+import CardSection from "@/components/cards/CardSection.vue";
 import TmList from "@/components/lists/TmList.vue";
 import TmActionItem from "@/components/lists/TmActionItem.vue";
-import TmCardActionSection from "@/components/cards/TmCardActionSection.vue";
+import CardActionSection from "@/components/cards/CardActionSection.vue";
 import ButtonFlat from "@/components/buttons/ButtonFlat.vue";
 import { Requirement, requirementStore } from "@/stores/Requirement";
 import RequirementSearch from "./RequirementSearch.vue";
@@ -102,12 +102,12 @@ watch(
 
 <template>
   <TmDialog v-model="model">
-    <TmCard>
-      <TmCardSection>
+    <Card>
+      <CardSection>
         <h2>Add Requirement</h2>
-      </TmCardSection>
+      </CardSection>
 
-      <TmCardSection class="q-pt-none">
+      <CardSection class="q-pt-none">
         <span>Required Tasks</span>
         <TmList hasBorder>
           <TmActionItem
@@ -118,20 +118,20 @@ watch(
             @click="removeRequirement(chosenTask)"
           />
         </TmList>
-      </TmCardSection>
+      </CardSection>
 
-      <TmCardSection class="q-pt-none">
+      <CardSection class="q-pt-none">
         <span>Available</span>
         <RequirementSearch
           :exclude="tasksToExcludeFromAvailable"
           @taskChosen="addRequirement"
         />
-      </TmCardSection>
+      </CardSection>
 
-      <TmCardActionSection>
+      <CardActionSection>
         <ButtonFlat label="Cancel" @click="exitDiscardingChanges" />
         <ButtonFlat label="Save Changes" @click="exitSavingChanges" />
-      </TmCardActionSection>
-    </TmCard>
+      </CardActionSection>
+    </Card>
   </TmDialog>
 </template>
