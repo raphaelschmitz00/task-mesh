@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from "vue";
 import { type Task, taskStore } from "@/stores/Task";
-import TmDialog from "@/components/dialogs/TmDialog.vue";
+import Dialog from "@/components/dialogs/Dialog.vue";
 import Card from "@/components/cards/Card.vue";
 import CardSection from "@/components/cards/CardSection.vue";
 import TmList from "@/components/lists/TmList.vue";
@@ -101,7 +101,7 @@ watch(
 </script>
 
 <template>
-  <TmDialog v-model="model">
+  <Dialog v-model="model">
     <Card>
       <CardSection>
         <h2>Add Requirement</h2>
@@ -133,5 +133,5 @@ watch(
         <ButtonFlat label="Save Changes" @click="exitSavingChanges" />
       </CardActionSection>
     </Card>
-  </TmDialog>
+  </Dialog>
 </template>

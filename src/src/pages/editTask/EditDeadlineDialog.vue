@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, watch } from "vue";
 import { type Task } from "@/stores/Task";
-import TmDialog from "@/components/dialogs/TmDialog.vue";
+import Dialog from "@/components/dialogs/Dialog.vue";
 import Card from "@/components/cards/Card.vue";
 import CardSection from "@/components/cards/CardSection.vue";
 import CardActionSection from "@/components/cards/CardActionSection.vue";
@@ -45,7 +45,7 @@ fetchDeadline();
 </script>
 
 <template>
-  <TmDialog v-model="model">
+  <Dialog v-model="model">
     <Card>
       <CardSection>
         <h2>Edit Deadline</h2>
@@ -63,5 +63,5 @@ fetchDeadline();
         <ButtonFlat label="Save Changes" @click="exitSavingChanges" />
       </CardActionSection>
     </Card>
-  </TmDialog>
+  </Dialog>
 </template>
