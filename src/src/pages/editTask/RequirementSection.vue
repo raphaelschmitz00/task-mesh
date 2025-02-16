@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, watch } from "vue";
 import { type Task } from "@/stores/Task";
-import StandardButton from "@/components/buttons/TmButton.vue";
+import Button from "@/components/buttons/Button.vue";
 import RequirementEditorDialog from "./RequirementEditorDialog.vue";
 import { requirementStore } from "@/stores/Requirement";
 
@@ -31,11 +31,7 @@ fetch();
       </div>
     </div>
 
-    <StandardButton
-      icon="add"
-      label="Add"
-      @click="state.editDialogIsShown = true"
-    />
+    <Button icon="add" label="Add" @click="state.editDialogIsShown = true" />
     <RequirementEditorDialog
       v-model="state.editDialogIsShown"
       :task="model"

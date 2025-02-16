@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from "vue";
 import { type Task, taskStore } from "@/stores/Task";
-import TmDialog from "@/components/dialogs/TmDialog.vue";
-import TmCard from "@/components/cards/TmCard.vue";
-import TmCardSection from "@/components/cards/TmCardSection.vue";
-import TmList from "@/components/lists/TmList.vue";
-import TmActionItem from "@/components/lists/TmActionItem.vue";
-import TmCardActionSection from "@/components/cards/TmCardActionSection.vue";
-import TmFlatButton from "@/components/buttons/TmFlatButton.vue";
+import Dialog from "@/components/dialogs/Dialog.vue";
+import Card from "@/components/cards/Card.vue";
+import CardSection from "@/components/cards/CardSection.vue";
+import List from "@/components/lists/List.vue";
+import ListActionItem from "@/components/lists/ListActionItem.vue";
+import CardActionSection from "@/components/cards/CardActionSection.vue";
+import ButtonFlat from "@/components/buttons/ButtonFlat.vue";
 import { Requirement, requirementStore } from "@/stores/Requirement";
 import RequirementSearch from "./RequirementSearch.vue";
 
@@ -101,37 +101,37 @@ watch(
 </script>
 
 <template>
-  <TmDialog v-model="model">
-    <TmCard>
-      <TmCardSection>
+  <Dialog v-model="model">
+    <Card>
+      <CardSection>
         <h2>Add Requirement</h2>
-      </TmCardSection>
+      </CardSection>
 
-      <TmCardSection class="q-pt-none">
+      <CardSection class="q-pt-none">
         <span>Required Tasks</span>
-        <TmList hasBorder>
-          <TmActionItem
+        <List hasBorder>
+          <ListActionItem
             v-for="chosenTask in chosenTasks"
             :key="chosenTask.id"
             :label="chosenTask.name"
             icon="remove_circle"
             @click="removeRequirement(chosenTask)"
           />
-        </TmList>
-      </TmCardSection>
+        </List>
+      </CardSection>
 
-      <TmCardSection class="q-pt-none">
+      <CardSection class="q-pt-none">
         <span>Available</span>
         <RequirementSearch
           :exclude="tasksToExcludeFromAvailable"
           @taskChosen="addRequirement"
         />
-      </TmCardSection>
+      </CardSection>
 
-      <TmCardActionSection>
-        <TmFlatButton label="Cancel" @click="exitDiscardingChanges" />
-        <TmFlatButton label="Save Changes" @click="exitSavingChanges" />
-      </TmCardActionSection>
-    </TmCard>
-  </TmDialog>
+      <CardActionSection>
+        <ButtonFlat label="Cancel" @click="exitDiscardingChanges" />
+        <ButtonFlat label="Save Changes" @click="exitSavingChanges" />
+      </CardActionSection>
+    </Card>
+  </Dialog>
 </template>

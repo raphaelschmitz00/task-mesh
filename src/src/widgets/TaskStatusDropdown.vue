@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { TaskStatus, allTaskStatuses, getTaskStatusName } from "@/stores/Task";
-import StandardSelect from "@/components/forms/TmSelect.vue";
+import Select from "@/components/forms/Select.vue";
 
 const model = defineModel<TaskStatus>();
 </script>
 
 <template>
-  <StandardSelect
+  <Select
     v-model="model"
     :options="allTaskStatuses"
     :option-label="getTaskStatusName"

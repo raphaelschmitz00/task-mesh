@@ -2,7 +2,7 @@
 import { reactive, watch } from "vue";
 import { useRouter } from "vue-router";
 import { Task, taskStore } from "@/stores/Task";
-import Error404 from "@/components/errors/404.vue";
+import Error404 from "@/components/errors/Error404.vue";
 import EditTaskForm from "./EditTaskForm.vue";
 import SkeletonText from "@/components/skeletons/SkeletonText.vue";
 

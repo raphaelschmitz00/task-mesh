@@ -2,10 +2,10 @@
 import { reactive, watch } from "vue";
 import { type Task } from "@/stores/Task";
 import { requirementStore } from "@/stores/Requirement";
-import TmCard from "@/components/cards/TmCard.vue";
-import TmCardSection from "@/components/cards/TmCardSection.vue";
+import Card from "@/components/cards/Card.vue";
+import CardSection from "@/components/cards/CardSection.vue";
 import TaskStatusView from "@/widgets/TaskStatusView.vue";
-import TmLinkButton from "@/components/buttons/TmLinkButton.vue";
+import ButtonLink from "@/components/buttons/ButtonLink.vue";
 import { routes } from "../router";
 
 const props = defineProps<{
@@ -26,15 +26,15 @@ watch(
 </script>
 
 <template>
-  <TmCard>
-    <TmCardSection>
+  <Card>
+    <CardSection>
       <div v-if="state.blockingTasks.length">❌ Is Blocked</div>
       <div>
         <TaskStatusView :status="task.status" />
         # {{ task.id }} - {{ task.name }}
       </div>
 
-      <TmLinkButton icon="edit" label="Edit" :path="routes.editTask(task.id)" />
-    </TmCardSection>
-  </TmCard>
+      <ButtonLink icon="edit" label="Edit" :path="routes.editTask(task.id)" />
+    </CardSection>
+  </Card>
 </template>

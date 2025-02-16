@@ -2,8 +2,8 @@
 import { reactive } from "vue";
 import { RouterView, useRouter } from "vue-router";
 import { routes } from "./pages/router";
-import TmList from "./components/lists/TmList.vue";
-import TmListItem from "./components/lists/TmListItem.vue";
+import List from "./components/lists/List.vue";
+import ListItem from "./components/lists/ListItem.vue";
 
 class State {
   drawerIsOpen: boolean = false;
@@ -44,14 +44,14 @@ const basePath = import.meta.env.BASE_URL;
     >
       <q-scroll-area class="fit">
         <nav>
-          <TmList>
-            <TmListItem>
+          <List>
+            <ListItem>
               <RouterLink :to="routes.home()">Status Board</RouterLink>
-            </TmListItem>
-            <TmListItem>
+            </ListItem>
+            <ListItem>
               <RouterLink :to="routes.meshView()">Mesh View</RouterLink>
-            </TmListItem>
-          </TmList>
+            </ListItem>
+          </List>
         </nav>
       </q-scroll-area>
     </q-drawer>

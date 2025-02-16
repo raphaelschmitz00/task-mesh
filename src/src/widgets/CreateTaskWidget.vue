@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 import { taskStore, Task, TaskStatus } from "@/stores/Task";
-import StandardButton from "@/components/buttons/TmButton.vue";
-import StandardInput from "@/components/forms/TmInput.vue";
-import TmCard from "@/components/cards/TmCard.vue";
-import TmCardSection from "@/components/cards/TmCardSection.vue";
+import Button from "@/components/buttons/Button.vue";
+import StandardInput from "@/components/forms/Input.vue";
+import Card from "@/components/cards/Card.vue";
+import CardSection from "@/components/cards/CardSection.vue";
 
 class State {
   task: Task = new Task("");
@@ -20,12 +20,12 @@ async function createTask() {
 </script>
 
 <template>
-  <TmCard class="createTaskWidget">
-    <TmCardSection>
+  <Card class="createTaskWidget">
+    <CardSection>
       <StandardInput v-model="state.task.name" @on-enter="createTask" />
-      <StandardButton label="Create Task" @click="createTask" />
-    </TmCardSection>
-  </TmCard>
+      <Button label="Create Task" @click="createTask" />
+    </CardSection>
+  </Card>
 </template>
 
 <style lang="css" scoped>
