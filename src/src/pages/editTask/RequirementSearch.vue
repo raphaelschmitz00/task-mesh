@@ -25,6 +25,7 @@ async function fetch() {
     (x) =>
       !props.exclude.map((x) => x.id).includes(x.id) &&
       x.name.toLowerCase().includes(state.searchTerm.toLowerCase()),
+    6,
   );
 }
 

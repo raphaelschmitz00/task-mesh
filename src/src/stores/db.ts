@@ -129,6 +129,7 @@ export async function get<T>(storeName: StoreName, id: number) {
 export async function query<T>(
   storeName: StoreName,
   predicate: (requirement: T) => boolean,
+  maxResults?: number,
 ) {
   return await doInObjectStore(
     storeName,
@@ -138,6 +139,11 @@ export async function query<T>(
 
         const request = store.openCursor();
         request.onsuccess = (event) => {
+          if (maxResults && items.length >= maxResults) {
+            resolve(items);
+            return;
+          }
+
           const eventTarget = event.target as IDBRequest<IDBCursorWithValue>;
           const cursor = eventTarget.result;
           if (!cursor) {
