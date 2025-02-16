@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 import { taskStore, Task, TaskStatus } from "@/stores/Task";
-import StandardButton from "@/components/buttons/TmButton.vue";
+import Button from "@/components/buttons/Button.vue";
 import StandardInput from "@/components/forms/TmInput.vue";
 import TmCard from "@/components/cards/TmCard.vue";
 import TmCardSection from "@/components/cards/TmCardSection.vue";
@@ -23,7 +23,7 @@ async function createTask() {
   <TmCard class="createTaskWidget">
     <TmCardSection>
       <StandardInput v-model="state.task.name" @on-enter="createTask" />
-      <StandardButton label="Create Task" @click="createTask" />
+      <Button label="Create Task" @click="createTask" />
     </TmCardSection>
   </TmCard>
 </template>

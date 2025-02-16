@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { type Task, taskStore } from "@/stores/Task";
-import StandardButton from "@/components/buttons/TmButton.vue";
+import Button from "@/components/buttons/Button.vue";
 import TmCard from "@/components/cards/TmCard.vue";
 import TmCardSection from "@/components/cards/TmCardSection.vue";
 import DeadlineSection from "./DeadlineSection.vue";
@@ -44,8 +44,8 @@ async function deleteTask() {
     </TmCardSection>
 
     <TmCardSection>
-      <StandardButton icon="delete" label="Delete" @click="deleteTask" />
-      <StandardButton icon="save" label="Save" @click="updateTask" />
+      <Button icon="delete" label="Delete" @click="deleteTask" />
+      <Button icon="save" label="Save" @click="updateTask" />
     </TmCardSection>
   </TmCard>
 </template>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, watch } from "vue";
 import { type Task } from "@/stores/Task";
-import StandardButton from "@/components/buttons/TmButton.vue";
+import Button from "@/components/buttons/Button.vue";
 import EditDeadlineDialog from "./EditDeadlineDialog.vue";
 import { Deadline, deadlineStore } from "@/stores/Deadline";
 import DateView from "@/components/DateView.vue";
@@ -26,11 +26,7 @@ fetch();
   <span>
     <span v-if="!state.deadline">No Deadline</span>
     <DateView v-else :date="state.deadline.date" />
-    <StandardButton
-      icon="add"
-      label="Edit"
-      @click="state.editDialogIsShown = true"
-    />
+    <Button icon="add" label="Edit" @click="state.editDialogIsShown = true" />
     <EditDeadlineDialog v-model="state.editDialogIsShown" :task="model" />
   </span>
 </template>
