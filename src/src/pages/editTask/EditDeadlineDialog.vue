@@ -7,6 +7,8 @@ import CardSection from "@/components/cards/CardSection.vue";
 import CardActionSection from "@/components/cards/CardActionSection.vue";
 import ButtonFlat from "@/components/buttons/ButtonFlat.vue";
 import { Deadline, deadlineStore } from "@/stores/Deadline";
+import DatePicker from "@/components/forms/DatePicker.vue";
+import TimePicker from "@/components/forms/TimePicker.vue";
 
 const model = defineModel<boolean>();
 
@@ -54,8 +56,8 @@ fetchDeadline();
       <CardSection> Current value: {{ state.chosenDateTime }} </CardSection>
 
       <CardSection>
-        <q-date v-model="state.chosenDateTime" mask="YYYY-MM-DD HH:mm" />
-        <q-time v-model="state.chosenDateTime" mask="YYYY-MM-DD HH:mm" />
+        <DatePicker v-model="state.chosenDateTime" />
+        <TimePicker v-model="state.chosenDateTime" />
       </CardSection>
 
       <CardActionSection>
