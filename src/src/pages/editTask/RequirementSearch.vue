@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TmInput from "@/components/forms/TmInput.vue";
+import Input from "@/components/forms/Input.vue";
 import TmActionItem from "@/components/lists/TmActionItem.vue";
 import TmList from "@/components/lists/TmList.vue";
 import { Task, taskStore } from "@/stores/Task";
@@ -36,7 +36,7 @@ fetch();
 
 <template>
   <div>
-    <TmInput v-model="state.searchTerm" placeholder="Search..." />
+    <Input v-model="state.searchTerm" placeholder="Search..." />
     <TmList hasBorder>
       <TmActionItem
         v-for="task in state.tasks"

@@ -2,7 +2,7 @@
 import { reactive } from "vue";
 import { taskStore, Task, TaskStatus } from "@/stores/Task";
 import Button from "@/components/buttons/Button.vue";
-import StandardInput from "@/components/forms/TmInput.vue";
+import StandardInput from "@/components/forms/Input.vue";
 import Card from "@/components/cards/Card.vue";
 import CardSection from "@/components/cards/CardSection.vue";
 
