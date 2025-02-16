@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from "vue";
-import { type Task, taskStore } from "@/stores/Task";
+import { type Task } from "@/stores/Task";
 import Dialog from "@/components/dialogs/Dialog.vue";
 import Card from "@/components/cards/Card.vue";
 import CardSection from "@/components/cards/CardSection.vue";
@@ -18,9 +18,9 @@ const props = defineProps<{
 }>();
 
 class State {
-  requiredTasks: Task[] = [];
-  addedTasks: Task[] = [];
-  removedTasks: Task[] = [];
+  requiredTasks = new Array<Task>();
+  addedTasks = new Array<Task>();
+  removedTasks = new Array<Task>();
 }
 const state = reactive(new State());
 
@@ -45,11 +45,6 @@ const chosenTasks = computed(() =>
   ),
 );
 
-const tasksToExcludeFromAvailable = computed(() => [
-  props.task,
-  ...chosenTasks.value,
-]);
-
 function addRequirement(task: Task) {
   const indexInRemovedTasks = state.removedTasks.indexOf(task);
   if (indexInRemovedTasks === -1) state.addedTasks.push(task);
@@ -62,9 +57,12 @@ function removeRequirement(task: Task) {
   else state.addedTasks.splice(indexInAddedTasks, 1);
 }
 
-function reset() {
+const unaddableTasks = computed(() => [props.task, ...chosenTasks.value]);
+
+function closeDialog() {
   state.addedTasks.length = 0;
   state.removedTasks.length = 0;
+  model.value = false;
 }
 
 async function exitSavingChanges() {
@@ -74,20 +72,9 @@ async function exitSavingChanges() {
 
   await requirementStore.removeFromTask(props.task, state.removedTasks);
 
-  reset();
-  model.value = false;
+  closeDialog();
   emit("requirementsChanged");
 }
-
-function exitDiscardingChanges() {
-  reset();
-  model.value = false;
-}
-
-watch(
-  () => props.task,
-  () => reset(),
-);
 </script>
 
 <template>
@@ -113,13 +100,13 @@ watch(
       <CardSection class="q-pt-none">
         <span>Available</span>
         <RequirementSearch
-          :exclude="tasksToExcludeFromAvailable"
+          :exclude="unaddableTasks"
           @taskChosen="addRequirement"
         />
       </CardSection>
 
       <CardActionSection>
-        <ButtonFlat label="Cancel" @click="exitDiscardingChanges" />
+        <ButtonFlat label="Cancel" @click="closeDialog" />
         <ButtonFlat label="Save Changes" @click="exitSavingChanges" />
       </CardActionSection>
     </Card>
