@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 import { taskStore } from "@/stores/Task";
-import sortTasksIntoDateGroups, { DateGroup } from "./sortTasksIntoDateGroups";
+import sortIntoDateGroups, { type DateGroup } from "./sortIntoDateGroups";
 import DateView from "@/components/DateView.vue";
 
 class State {
@@ -11,21 +11,22 @@ const state = reactive(new State());
 
 taskStore
   .query(() => true)
-  .then((x) => sortTasksIntoDateGroups(x))
-  .then((x) => state.dateGroups == x);
+  .then(sortIntoDateGroups)
+  .then((x) => (state.dateGroups = x));
 </script>
 
 <template>
   <div>
     MESH
+    <div></div>
     <div>
       <div
         v-for="dateGroup in state.dateGroups"
-        :key="dateGroup.deadline?.toString()"
+        :key="dateGroup.date?.toString()"
         class="periodColumn"
       >
         deadline:
-        <DateView v-if="dateGroup.deadline" :date="dateGroup.deadline.date" />
+        <DateView v-if="dateGroup.date" :date="dateGroup.date" />
         <span v-else>None</span>
         <div>
           <div v-for="task in dateGroup.tasks" :key="task.id">
