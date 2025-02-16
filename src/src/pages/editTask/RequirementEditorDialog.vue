@@ -4,8 +4,8 @@ import { type Task, taskStore } from "@/stores/Task";
 import Dialog from "@/components/dialogs/Dialog.vue";
 import Card from "@/components/cards/Card.vue";
 import CardSection from "@/components/cards/CardSection.vue";
-import TmList from "@/components/lists/TmList.vue";
-import TmActionItem from "@/components/lists/TmActionItem.vue";
+import List from "@/components/lists/List.vue";
+import ListActionItem from "@/components/lists/ListActionItem.vue";
 import CardActionSection from "@/components/cards/CardActionSection.vue";
 import ButtonFlat from "@/components/buttons/ButtonFlat.vue";
 import { Requirement, requirementStore } from "@/stores/Requirement";
@@ -109,15 +109,15 @@ watch(
 
       <CardSection class="q-pt-none">
         <span>Required Tasks</span>
-        <TmList hasBorder>
-          <TmActionItem
+        <List hasBorder>
+          <ListActionItem
             v-for="chosenTask in chosenTasks"
             :key="chosenTask.id"
             :label="chosenTask.name"
             icon="remove_circle"
             @click="removeRequirement(chosenTask)"
           />
-        </TmList>
+        </List>
       </CardSection>
 
       <CardSection class="q-pt-none">

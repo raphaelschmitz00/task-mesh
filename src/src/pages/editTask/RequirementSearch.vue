@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Input from "@/components/forms/Input.vue";
-import TmActionItem from "@/components/lists/TmActionItem.vue";
-import TmList from "@/components/lists/TmList.vue";
+import ListActionItem from "@/components/lists/ListActionItem.vue";
+import List from "@/components/lists/List.vue";
 import { Task, taskStore } from "@/stores/Task";
 import { watchDebounced } from "@vueuse/core";
 import { reactive, watch } from "vue";
@@ -37,14 +37,14 @@ fetch();
 <template>
   <div>
     <Input v-model="state.searchTerm" placeholder="Search..." />
-    <TmList hasBorder>
-      <TmActionItem
+    <List hasBorder>
+      <ListActionItem
         v-for="task in state.tasks"
         :key="task.id"
         :label="task.name"
         icon="add_circle"
         @click="emit('taskChosen', task)"
       />
-    </TmList>
+    </List>
   </div>
 </template>
