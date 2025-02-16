@@ -7,7 +7,7 @@ import TmCardSection from "@/components/cards/TmCardSection.vue";
 import TmList from "@/components/lists/TmList.vue";
 import TmActionItem from "@/components/lists/TmActionItem.vue";
 import TmCardActionSection from "@/components/cards/TmCardActionSection.vue";
-import TmFlatButton from "@/components/buttons/TmFlatButton.vue";
+import ButtonFlat from "@/components/buttons/ButtonFlat.vue";
 import { Requirement, requirementStore } from "@/stores/Requirement";
 import RequirementSearch from "./RequirementSearch.vue";
 
@@ -129,8 +129,8 @@ watch(
       </TmCardSection>
 
       <TmCardActionSection>
-        <TmFlatButton label="Cancel" @click="exitDiscardingChanges" />
-        <TmFlatButton label="Save Changes" @click="exitSavingChanges" />
+        <ButtonFlat label="Cancel" @click="exitDiscardingChanges" />
+        <ButtonFlat label="Save Changes" @click="exitSavingChanges" />
       </TmCardActionSection>
     </TmCard>
   </TmDialog>

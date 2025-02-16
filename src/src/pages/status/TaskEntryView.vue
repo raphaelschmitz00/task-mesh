@@ -5,7 +5,7 @@ import { requirementStore } from "@/stores/Requirement";
 import TmCard from "@/components/cards/TmCard.vue";
 import TmCardSection from "@/components/cards/TmCardSection.vue";
 import TaskStatusView from "@/widgets/TaskStatusView.vue";
-import TmLinkButton from "@/components/buttons/TmLinkButton.vue";
+import ButtonLink from "@/components/buttons/ButtonLink.vue";
 import { routes } from "../router";
 
 const props = defineProps<{
@@ -34,7 +34,7 @@ watch(
         # {{ task.id }} - {{ task.name }}
       </div>
 
-      <TmLinkButton icon="edit" label="Edit" :path="routes.editTask(task.id)" />
+      <ButtonLink icon="edit" label="Edit" :path="routes.editTask(task.id)" />
     </TmCardSection>
   </TmCard>
 </template>

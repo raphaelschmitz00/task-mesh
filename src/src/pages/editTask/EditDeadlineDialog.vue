@@ -5,7 +5,7 @@ import TmDialog from "@/components/dialogs/TmDialog.vue";
 import TmCard from "@/components/cards/TmCard.vue";
 import TmCardSection from "@/components/cards/TmCardSection.vue";
 import TmCardActionSection from "@/components/cards/TmCardActionSection.vue";
-import TmFlatButton from "@/components/buttons/TmFlatButton.vue";
+import ButtonFlat from "@/components/buttons/ButtonFlat.vue";
 import { Deadline, deadlineStore } from "@/stores/Deadline";
 
 const model = defineModel<boolean>();
@@ -59,8 +59,8 @@ fetchDeadline();
       </TmCardSection>
 
       <TmCardActionSection>
-        <TmFlatButton label="Cancel" @click="exitDiscardingChanges" />
-        <TmFlatButton label="Save Changes" @click="exitSavingChanges" />
+        <ButtonFlat label="Cancel" @click="exitDiscardingChanges" />
+        <ButtonFlat label="Save Changes" @click="exitSavingChanges" />
       </TmCardActionSection>
     </TmCard>
   </TmDialog>
