@@ -1,5 +1,7 @@
+<script setup lang="ts">
+import Error404 from "@/components/errors/404.vue";
+</script>
+
 <template>
-  <div>
-    <h1>404 - Page not found</h1>
-  </div>
+  <Error404 />
 </template>
