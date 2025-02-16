@@ -29,7 +29,7 @@ function compareDates(a: Date, b: Date) {
   return 0;
 }
 
-export default async function sortTasksIntoDateGroups(
+export default async function sortIntoDateGroups(
   tasks: Task[],
 ): Promise<DateGroup[]> {
   const tasksByEndDate = await getTasksWithOwnEndDate(tasks);

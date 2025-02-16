@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 import { taskStore } from "@/stores/Task";
-import sortTasksIntoDateGroups, {
-  type DateGroup,
-} from "./sortTasksIntoDateGroups";
+import sortIntoDateGroups, { type DateGroup } from "./sortIntoDateGroups";
 import DateView from "@/components/DateView.vue";
 
 class State {
@@ -13,7 +11,7 @@ const state = reactive(new State());
 
 taskStore
   .query(() => true)
-  .then(sortTasksIntoDateGroups)
+  .then(sortIntoDateGroups)
   .then((x) => (state.dateGroups = x));
 </script>
 
