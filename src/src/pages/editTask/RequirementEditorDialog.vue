@@ -12,10 +12,7 @@ import { Requirement, requirementStore } from "@/stores/Requirement";
 import RequirementSearch from "./RequirementSearch.vue";
 
 const model = defineModel<boolean>();
-
-const props = defineProps<{
-  task: Task;
-}>();
+const props = defineProps<{ task: Task }>();
 
 class State {
   requiredTasks = new Array<Task>();
@@ -24,9 +21,7 @@ class State {
 }
 const state = reactive(new State());
 
-const emit = defineEmits<{
-  requirementsChanged: [];
-}>();
+const emit = defineEmits<{ requirementsChanged: [] }>();
 
 async function fetchRequiredTasks() {
   state.requiredTasks = await requirementStore.getRequiredTasks(props.task);
