@@ -35,8 +35,8 @@ export class TaskStore {
 
   get = (id: number) => get<Task>(StoreName.tasks, id);
 
-  query = (predicate: (task: Task) => boolean) =>
-    query<Task>(StoreName.tasks, predicate);
+  query = (predicate: (task: Task) => boolean, maxResults?: number) =>
+    query<Task>(StoreName.tasks, predicate, maxResults);
 
   remove = (deadline: Task) => remove(StoreName.tasks, deadline);
 }
