@@ -18,7 +18,7 @@ const props = defineProps<{
 }>();
 
 class State {
-  storedRequiredTasks: Task[] = [];
+  requiredTasks: Task[] = [];
   addedTasks: Task[] = [];
   removedTasks: Task[] = [];
 }
@@ -29,17 +29,7 @@ const emit = defineEmits<{
 }>();
 
 async function fetchRequiredTasks() {
-  const requirements = await requirementStore.query(
-    (x) => x.dependentTaskId == props.task.id,
-  );
-
-  const tasks = new Array<Task>();
-  state.storedRequiredTasks.length = 0;
-  for await (const requirement of requirements) {
-    const task = await taskStore.get(requirement.requiredTaskId)!;
-    tasks.push(task);
-  }
-  state.storedRequiredTasks.push(...tasks);
+  state.requiredTasks = await requirementStore.getRequiredTasks(props.task);
 }
 
 watch(
@@ -50,7 +40,7 @@ watch(() => props.task, fetchRequiredTasks);
 fetchRequiredTasks();
 
 const chosenTasks = computed(() =>
-  [...state.storedRequiredTasks, ...state.addedTasks].filter(
+  [...state.requiredTasks, ...state.addedTasks].filter(
     (x) => !state.removedTasks.includes(x),
   ),
 );
