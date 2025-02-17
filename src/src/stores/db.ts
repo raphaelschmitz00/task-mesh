@@ -102,16 +102,18 @@ export function removeProperty<T, K extends keyof T>(
   return rest;
 }
 
-export async function save(storeName: StoreName, entity: Entity) {
-  await doInObjectStore(storeName, async (store) => {
-    const request =
-      entity.id === 0
-        ? store.add(removeProperty(entity, "id"))
-        : store.put({ ...entity });
+export async function save(storeName: StoreName, ...entities: Entity[]) {
+  for (const entity of entities) {
+    await doInObjectStore(storeName, async (store) => {
+      const request =
+        entity.id === 0
+          ? store.add(removeProperty(entity, "id"))
+          : store.put({ ...entity });
 
-    request.onsuccess = () => (entity.id = request.result as number);
-    request.onerror = console.log;
-  });
+      request.onsuccess = () => (entity.id = request.result as number);
+      request.onerror = console.log;
+    });
+  }
 }
 
 export async function get<T>(storeName: StoreName, id: number) {
