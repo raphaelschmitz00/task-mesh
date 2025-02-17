@@ -23,16 +23,13 @@ const state = reactive(new State());
 
 const emit = defineEmits<{ requirementsChanged: [] }>();
 
-async function fetchRequiredTasks() {
+async function fetch() {
+  if (!model.value) return;
   state.requiredTasks = await requirementStore.getRequiredTasks(props.task);
 }
 
-watch(
-  () => model.value,
-  (x) => x && fetchRequiredTasks(),
-);
-watch(() => props.task, fetchRequiredTasks);
-fetchRequiredTasks();
+watch([model, props.task], fetch);
+fetch();
 
 const chosenTasks = computed(() =>
   [...state.requiredTasks, ...state.addedTasks].filter(
