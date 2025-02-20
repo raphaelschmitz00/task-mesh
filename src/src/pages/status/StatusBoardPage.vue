@@ -9,7 +9,10 @@ class State {
 }
 const state = reactive(new State());
 
-taskStore.query(() => true).then((x) => (state.tasks = x));
+function fetch() {
+  taskStore.query(() => true).then((x) => (state.tasks = x));
+}
+fetch();
 
 const getWithStatus = (status: TaskStatus) =>
   state.tasks.filter((x) => x.status === status);
@@ -38,7 +41,7 @@ const dones = computed(() => getWithStatus(TaskStatus.Done));
         <TaskEntryView v-for="task in dones" :key="task.id" :task="task" />
       </div>
     </div>
-    <CreateTaskWidget />
+    <CreateTaskWidget @created="fetch" />
   </div>
 </template>
 
