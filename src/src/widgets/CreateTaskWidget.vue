@@ -12,10 +12,15 @@ class State {
 
 const state = reactive(new State());
 
+const emit = defineEmits<{
+  created: [];
+}>();
+
 async function createTask() {
   await taskStore.save({ ...state.task });
   state.task.status = TaskStatus.ToDo;
   state.task.name = "";
+  emit("created");
 }
 </script>
 
